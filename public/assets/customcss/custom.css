@@ -1,0 +1,170 @@
+/* Navbar */
+
+.navbar {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    box-shadow: 0 3px 9px 3px rgba(0, 0, 0, 0.1);
+    margin: 0;
+}
+
+.navbar-brand span {
+    letter-spacing: 1px;
+}
+
+.nav-item {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #CFC697;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.nav-item:hover {
+    background-color: #CFC697;
+    color: #270D05;
+}
+
+/* Header */
+.carousel-item img {
+    filter: brightness(0.6);
+    object-fit: cover;
+    width: 100%;
+    height: 615px;
+}
+
+/* Button */
+.btn:not(.nav-btns button) {
+    background-color: #270D05;
+    color: white;
+    padding: 10px 28px;
+    border-radius: 25px;
+    border: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn:not(.nav-btns button):hover {
+    background-color: white;
+    color: #270D05;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-booknow {
+    background-color: #CFC697 !important;
+    border: 2px solid #270D05 !important; /* Outline color */
+    color: #270D05 !important; /* Text color */
+    padding: 8px 16px;
+    border-radius: 2px !important;
+    transition: background-color 0.3s, color 0.3s;
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.btn-booknow:hover {
+    background-color: #270D05 !important;
+    color: #CFC697 !important; /* Text color when hovered */
+}
+
+
+
+/* Logo */
+.logo {
+    width: 110px;
+}
+
+/* Check Availability */
+.check-availability {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.8); 
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 90%; 
+    max-width: 800px; 
+    text-align: center;
+    z-index: 10;
+}
+
+/* Card Styles */
+.card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+    width: 100%; 
+    max-width: 280px;
+}
+
+.d-flex {
+    justify-content: center; 
+}
+
+.card:hover {
+    transform: scale(1.05);
+}
+
+.card img {
+    object-fit: cover;
+    height: 150px;
+}
+
+.card-text {
+    color: #555;
+}
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin: 2rem 0;
+    color: #333;
+}
+
+/* Testimonials */
+
+
+.testimonial-card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    background-color: #fff;
+}
+
+.testimonial-card img {
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+
+
+/* Contacts */
+.contacts {
+    padding: 2rem 0;
+    background-color: #f1f1f1;
+}
+
+.contact-info {
+    text-align: center;
+    font-size: 1.125rem;
+    color: #333;
+}
+
+/* Media Queries */
+@media (max-width: 992px) {
+
+    .check-availability {
+        width: 90%; 
+        padding: 15px;
+    }
+
+    .card {
+        width: 100%;
+        max-width: 100%; 
+    }
+
+    .testimonial-card {
+        padding: 1rem; 
+    }
+}

@@ -1,0 +1,296 @@
+/* Navbar */
+.navbar-custom {
+    background-color: rgba(255, 255, 255, 0.8) !important;
+    box-shadow: 0 3px 9px 3px rgba(0, 0, 0, 0.1);
+    margin: 0;
+}
+
+.navbarbrand-logo span {
+    letter-spacing: 1px;
+}
+
+.navitem-custom {
+    padding: 10px 20px;
+    text-decoration: none;
+    color: #CFC697;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.navitem-custom:hover {
+    background-color: #CFC697;
+    color: #270D05;
+}
+
+
+/* when link is active*/
+.navlink-custom {
+    position: relative;
+}
+
+.navlink-custom.active {
+    font-weight: bold; 
+    color: #270D05; 
+    border-bottom: 2px solid #270D05; 
+}
+
+.navlink-custom {
+    transition: border-bottom 0.3s ease;
+}
+
+
+
+/* Header */
+.carouselitem-bannerhome img {
+    filter: brightness(0.6);
+    object-fit: cover;
+    width: 100%;
+    height: 615px;
+}
+
+/* Check Availability */
+.check-availability {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(255, 255, 255, 0.8); 
+    padding: 10px;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 90%; 
+    max-width: 800px; 
+    text-align: center;
+    z-index: 10;
+}
+
+/* title of seactions */
+
+.section-title {
+    font-size: 1.5rem;
+    font-weight: 400;
+    margin: 2rem 0;
+    color: #333;
+}
+
+
+/* Testimonials */
+.testimonial-card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    background-color: #fff;
+}
+
+.testimonial-card img {
+    border-radius: 50%;
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+}
+
+
+
+/* Contacts */
+.contacts {
+    padding: 2rem 0;
+    background-color: #f1f1f1;
+}
+
+.contact-info {
+    text-align: center;
+    font-size: 1.125rem;
+    color: #333;
+}
+
+/*Background for customer*/
+.bg-customer{
+    background-color: #979170;
+}
+
+
+/* Footer Styles */
+.footer {
+    background: linear-gradient(135deg, #270D05 40%, #ccc18d 100%);
+    color: #f1f1f1;
+    padding: 40px 0;
+}
+
+.footer .section-title {
+    color: #CFC697;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+.footer-link {
+    color: #CFC697;
+    font-weight: 500;
+    text-decoration: none;
+    transition: color 0.3s ease-in-out, border-bottom 0.3s ease-in-out;
+    border-bottom: 2px solid transparent;
+}
+
+.footer-link:hover {
+    color: #ffda79;
+    border-bottom: 2px solid #ffda79;
+}
+
+.footer small {
+    color: #CFC697;
+}
+
+.footer .contact-info i {
+    color: #ffda79;
+    transition: color 0.3s ease;
+}
+
+.footer .contact-info i:hover {
+    color: hsl(6, 100%, 94%);
+}
+
+.footer a {
+    transition: all 0.3s ease-in-out;
+}
+
+.footer a:hover {
+    text-decoration: underline;
+    color: #ffda79;
+}
+
+.footer p {
+    font-size: 1.1rem;
+    margin-bottom: 10px;
+    color: white;
+}
+/*------------ Auth(login and register custom css)-------------*/
+.bg-auth {
+    position: relative;
+    margin: 0;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-image: url('./assets/images/banner1.jpg') !important;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+}
+
+/* Create a transparent overlay */
+.bg-auth::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5); /* Adjust transparency here */
+    z-index: 1;
+}
+
+/* Ensure content stays on top of the overlay */
+.bg-auth > * {
+    position: relative;
+    z-index: 2;
+}
+
+
+/* Logo */
+.logo {
+    width: 150px;
+    display: block;
+    margin: 0 auto 10px;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.1);
+}
+
+@media (max-width: 576px) {
+    .footer .section-title {
+        font-size: 1.2rem;
+    }
+
+    .footer p {
+        font-size: 1rem;
+    }
+}
+
+
+/* Media Queries */
+@media (max-width: 992px) {
+
+    .check-availability {
+        width: 90%; 
+        padding: 15px;
+    }
+
+    .testimonial-card {
+        padding: 1rem; 
+    }
+}
+
+/* Adjustments for tablets and smaller screens */
+@media (max-width: 768px) {
+    .auth-container {
+        padding: 10px;
+    }
+
+    .auth-title {
+        font-size: 1rem;
+    }
+
+
+    .text-secondary {
+        font-size: 0.8125rem;
+    }
+
+    .text-register {
+        font-size: 0.9375rem;
+    }
+
+    .text-login {
+        font-size: 0.9375rem;
+    }
+
+
+    .logo {
+        width: 120px;
+    }
+}
+
+/* Adjustments for mobile screens */
+@media (max-width: 480px) {
+    .bg-auth {
+        padding: 10px;
+    }
+
+    .auth-container {
+        padding: 10px;
+    }
+
+    .auth-title {
+        font-size: 0.875rem;
+    }
+
+    .text-secondary {
+        font-size: 0.75rem;
+    }
+
+    .text-register {
+        font-size: 0.875rem;
+    }
+
+    .text-login {
+        font-size: 0.875rem;
+    }
+
+    .btn-primary {
+        padding: 5px 10px;
+    }
+
+    .logo {
+        width: 100px;
+    }
+}

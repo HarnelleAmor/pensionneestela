@@ -1,0 +1,201 @@
+/* General Body Styling */
+body {
+    margin: 0;
+    height: 100vh;
+    font-family: Arial, sans-serif;
+    background-image: url('./assets/images/banner1.jpg') !important;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed; 
+}
+
+/* Main Container */
+.main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 15px;
+}
+
+/* Form Container */
+.form-container {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+/* Form Title */
+.form-title {
+    color: #270D05;
+    font-size: 1.125rem;
+    font-weight: bold;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+/* Form Labels */
+.form-label {
+    color: #270D05;
+    font-size: 0.875rem;
+    font-weight: bold;
+}
+
+/* Text Styles */
+.text-primary {
+    color: #270D05;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.text-secondary {
+    color: #270D05;
+    font-size: 0.875rem;
+}
+
+.text-register {
+    font-size: 1rem;
+    font-weight: bolder;
+    color: hsl(14, 77%, 9%);
+}
+
+.text-register:hover {
+    color: #CFC697;
+    transition: color 0.3s ease;
+}
+
+.text-login {
+    font-size: 1rem;
+    font-weight: bolder;
+    color: #270D05;
+}
+
+.text-login:hover {
+    color: #CFC697;
+}
+
+/* Primary Button */
+.btn-primary {
+    background-color: #270D05;
+    color: #CFC697;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    width: 100%;
+    transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+    background-color: #CFC697;
+    color: #270D05;
+}
+
+/* Button */
+.btn:not(.nav-btns button) {
+    background-color: #270D05;
+    color: white;
+    padding: 10px 28px;
+    border-radius: 25px;
+    border: none;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn:not(.nav-btns button):hover {
+    background-color: white;
+    color: #270D05;
+    transition: background-color 0.3s, color 0.3s;
+}
+/* Logo */
+.logo {
+    width: 150px;
+    display: block;
+    margin: 0 auto 10px;
+    transition: transform 0.3s ease;
+}
+
+.logo:hover {
+    transform: scale(1.1);
+}
+
+/* Responsive Styles */
+
+/* Adjustments for tablets and smaller screens */
+@media (max-width: 768px) {
+    .form-container {
+        padding: 15px;
+    }
+
+    .form-title {
+        font-size: 1rem;
+    }
+
+    .text-primary {
+        font-size: 0.9375rem;
+    }
+
+    .text-secondary {
+        font-size: 0.8125rem;
+    }
+
+    .text-register {
+        font-size: 0.9375rem;
+    }
+
+    .text-login {
+        font-size: 0.9375rem;
+    }
+
+    .btn-primary {
+        padding: 6px 12px;
+    }
+
+    .logo {
+        width: 120px;
+    }
+}
+
+/* Adjustments for mobile screens */
+@media (max-width: 480px) {
+    .main {
+        padding: 10px;
+    }
+
+    .form-container {
+        padding: 10px;
+    }
+
+    .form-title {
+        font-size: 0.875rem;
+    }
+
+    .text-primary {
+        font-size: 0.875rem;
+    }
+
+    .text-secondary {
+        font-size: 0.75rem;
+    }
+
+    .text-register {
+        font-size: 0.875rem;
+    }
+
+    .text-login {
+        font-size: 0.875rem;
+    }
+
+    .btn-primary {
+        padding: 5px 10px;
+    }
+
+    .logo {
+        width: 100px;
+    }
+}

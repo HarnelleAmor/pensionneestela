@@ -1,0 +1,197 @@
+$blackbean: #270d05;
+$mossgreen: #979170;
+$sage: #cfc697;
+$sage-light: #E5E1C7;
+$sage-dark: #BFB573;
+$darkgreen: #042a2b;
+$darkgreen-dark: #021213;
+
+.text-blackbean {
+    --bs-text-opacity: 1;
+    color: rgba($blackbean, var(--bs-text-opacity)) !important
+}
+
+.text-mossgreen {
+    --bs-text-opacity: 1;
+    color: rgba($mossgreen, var(--bs-text-opacity)) !important
+}
+
+.text-sage {
+    --bs-text-opacity: 1;
+    color: rgba($sage, var(--bs-text-opacity)) !important
+}
+
+.text-sage-light {
+    --bs-text-opacity: 1;
+    color: rgba($sage-light, var(--bs-text-opacity)) !important
+}
+
+.text-darkgreen {
+    --bs-text-opacity: 1;
+    color: rgba($darkgreen, var(--bs-text-opacity)) !important
+}
+
+.bg-blackbean {
+    --bs-bg-opacity: 1;
+    background-color: rgba($blackbean, var(--bs-bg-opacity)) !important
+}
+
+.bg-mossgreen {
+    --bs-bg-opacity: 1;
+    background-color: rgba($mossgreen, var(--bs-bg-opacity)) !important
+}
+
+.bg-sage {
+    --bs-bg-opacity: 1;
+    background-color: rgba($sage, var(--bs-bg-opacity)) !important
+}
+
+.bg-sage-light {
+    --bs-bg-opacity: 1;
+    background-color: rgba($sage-light, var(--bs-bg-opacity)) !important
+}
+
+.bg-sage-dark {
+    --bs-bg-opacity: 1;
+    background-color: rgba($sage-dark, var(--bs-bg-opacity)) !important
+}
+
+.bg-darkgreen {
+    --bs-bg-opacity: 1;
+    background-color: rgba($darkgreen, var(--bs-bg-opacity)) !important
+}
+
+.text-bg-blackbean {
+    color: #fff !important;
+    background-color: rgba($blackbean, var(--bs-bg-opacity, 1)) !important;
+}
+
+.text-bg-sage {
+    color: #{$blackbean} !important;
+    background-color: rgba($sage, var(--bs-bg-opacity, 1)) !important;
+}
+
+.border-darkgreen {
+    --bs-border-opacity: 1;
+    border-color: rgba($darkgreen, var(--bs-border-opacity)) !important
+}
+
+.border-blackbean {
+    --bs-border-opacity: 1;
+    border-color: rgba($blackbean, var(--bs-border-opacity)) !important
+}
+
+.btn-blackbean {
+    --bs-btn-color: #{$sage-light};
+    --bs-btn-bg: #{$blackbean};
+    --bs-btn-border-color: #{$blackbean};
+    --bs-btn-hover-color: #{$blackbean};
+    --bs-btn-hover-bg: #{$sage};
+    --bs-btn-hover-border-color: #{$sage};
+    --bs-btn-focus-shadow-rgb: 75, 13, 5;
+    --bs-btn-active-color: #{$sage};
+    --bs-btn-active-bg: #{$blackbean};
+    --bs-btn-active-border-color: #{$blackbean};
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #{$sage};
+    --bs-btn-disabled-bg: #{$blackbean};
+    --bs-btn-disabled-border-color: #{$blackbean};
+}
+
+.btn-outline-blackbean {
+    --bs-btn-color: #{$blackbean};
+    --bs-btn-border-color: #{$blackbean};
+    --bs-btn-hover-color: #{$blackbean};
+    --bs-btn-hover-bg: #{$sage};
+    --bs-btn-hover-border-color: #{$sage};
+    --bs-btn-focus-shadow-rgb: 75, 13, 5;
+    --bs-btn-active-color: #{$sage};
+    --bs-btn-active-bg: #{$blackbean};
+    --bs-btn-active-border-color: #{$blackbean};
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+// .btn-mossgreen {
+//     --bs-btn-color: #{$darkgreen};
+//     --bs-btn-bg: #{$mossgreen};
+//     --bs-btn-border-color: #{$mossgreen};
+//     --bs-btn-hover-color: #{$sage};
+//     --bs-btn-hover-bg: #{$darkgreen};
+//     --bs-btn-hover-border-color: #{$darkgreen};
+//     --bs-btn-focus-shadow-rgb: 75, 13, 5;
+//     --bs-btn-active-color: #{$darkgreen};
+//     --bs-btn-active-bg: #{$mossgreen};
+//     --bs-btn-active-border-color: #{$mossgreen};
+//     --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+//     --bs-btn-disabled-color: #{$darkgreen};
+//     --bs-btn-disabled-bg: #{$mossgreen};
+//     --bs-btn-disabled-border-color: #{$mossgreen};
+// }
+
+.btn-sage {
+    --bs-btn-color: #{$blackbean};
+    --bs-btn-bg: #{$sage};
+    --bs-btn-border-color: #{$sage};
+    --bs-btn-hover-color: #{$blackbean};
+    --bs-btn-hover-bg: #{$sage-dark};
+    --bs-btn-hover-border-color: #{$sage-dark};
+    --bs-btn-focus-shadow-rgb: 75, 13, 5;
+    --bs-btn-active-color: #{$blackbean};
+    --bs-btn-active-bg: #{$sage};
+    --bs-btn-active-border-color: #{$sage};
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #{$blackbean};
+    --bs-btn-disabled-bg: #{$sage};
+    --bs-btn-disabled-border-color: #{$sage};
+}
+
+.btn-outline-sage {
+    --bs-btn-color: #{$sage-light};
+    --bs-btn-border-color: #{$sage};
+    --bs-btn-hover-color: #{$blackbean};
+    --bs-btn-hover-bg: #{$sage-dark};
+    --bs-btn-hover-border-color: #{$sage-dark};
+    --bs-btn-focus-shadow-rgb: 75, 13, 5;
+    --bs-btn-active-color: #{$blackbean};
+    --bs-btn-active-bg: #{$sage};
+    --bs-btn-active-border-color: #{$sage};
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+.btn-darkgreen {
+    --bs-btn-color: #{$sage-light};
+    --bs-btn-bg: #{$darkgreen};
+    --bs-btn-border-color: #{$darkgreen};
+    --bs-btn-hover-color: #{$sage-light};
+    --bs-btn-hover-bg: #{$darkgreen-dark};
+    --bs-btn-hover-border-color: #{$darkgreen-dark};
+    --bs-btn-focus-shadow-rgb: 75, 13, 5;
+    --bs-btn-active-color: #{$sage-light};
+    --bs-btn-active-bg: #{$darkgreen};
+    --bs-btn-active-border-color: #{$darkgreen};
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+    --bs-btn-disabled-color: #{$sage-light};
+    --bs-btn-disabled-bg: #{$darkgreen};
+    --bs-btn-disabled-border-color: #{$darkgreen};
+}
+
+.btn-outline-darkgreen {
+    --bs-btn-color: #{$darkgreen};
+    --bs-btn-border-color: #{$darkgreen};
+    --bs-btn-hover-color: #{$sage-light};
+    --bs-btn-hover-bg: #{$darkgreen-dark};
+    --bs-btn-hover-border-color: #{$darkgreen-dark};
+    --bs-btn-focus-shadow-rgb: 75, 13, 5;
+    --bs-btn-active-color: #{$sage};
+    --bs-btn-active-bg: #{$darkgreen};
+    --bs-btn-active-border-color: #{$darkgreen};
+    --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
+}
+
+.btn-hover-gray {
+    --bs-btn-hover-bg: #{$gray-200};
+}
+
+.btn-hover-color-blackbean {
+    --bs-btn-hover-color: #{$blackbean};
+}
