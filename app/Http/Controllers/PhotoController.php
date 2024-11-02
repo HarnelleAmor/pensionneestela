@@ -6,6 +6,7 @@ use App\Models\Photo;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class PhotoController extends Controller
 {
@@ -15,7 +16,7 @@ class PhotoController extends Controller
     public function index()
     {
         Gate::authorize('is-manager');
-        $photos = Photo::with('unit')->paginate(4); 
+        $photos = Photo::with('unit')->get(); 
         return view('photos.index', compact('photos'));
     }
 
@@ -109,8 +110,13 @@ class PhotoController extends Controller
     {
         Gate::authorize('is-manager');
         $photo = Photo::findOrFail($id);
-        $photo->delete();
 
-        return redirect()->route('photos.index')->with('success', 'Photo deleted successfully.');
+        if ($photo->delete()) {
+            Alert::success('Success', 'Photo successfully deleted.');
+            return redirect()->back();
+        } else {
+            Alert::error('Error', 'There was an error deleting the photo');
+            return redirect()->back();
+        }
     }
 }

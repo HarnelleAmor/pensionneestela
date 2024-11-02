@@ -144,7 +144,8 @@
                                 <script type="module">
                                     $(document).ready(function() {
                                         $('#user_bookings').DataTable({
-                                            scrollX: true
+                                            scrollX: true,
+                                            scrollY: '20rem'
                                         });
                                     });
                                 </script>

@@ -30,8 +30,15 @@
                                 <tr>
                                     <td class="text-nowrap">{{ $account->first_name }} {{ $account->last_name }}</td>
                                     <td class="text-nowrap">{{ $account->email }}</td>
-                                    <td class="text-nowrap text-center">{{ $account->phone_no }}</td>
-                                    <td class="text-nowrap">{{ $account->usertype == 'customer' ? 'Customer' : 'Manager' }}</td>
+                                    <td class="text-nowrap text-center">
+                                        @if ($account->phone_no)
+                                            {{ $account->phone_no }}
+                                        @else
+                                            <small class="fst-italic text-muted">No number</small>
+                                        @endif
+                                        
+                                    </td>
+                                    <td class="text-nowrap">{{ ucfirst($account->usertype) }}</td>
                                     <td class="d-flex text-nowrap">
                                         <a href="{{ route('accounts.show', $account->id) }}" class="btn btn-darkgreen"><i class="bi bi-person-circle"></i> See Profile </a>
                                     </td>

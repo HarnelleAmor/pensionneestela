@@ -1,69 +1,99 @@
 @extends('layouts.manager')
 
 @section('content')
-    <div class="container mt-5">
-        <div class="row">
-            <div class="col-md-12">
-                @if(session('status'))
-                    <div class="alert alert-success">{{ session('status') }}</div>
-                @endif
-
+    <div class="container pt-3 vh-100">
+        <div class="row justify-content-center">
+            <div class="col-10">
                 <div class="card">
-                    <div class="card-header bg-dark d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0 text-white">UPDATE PHOTO</h5>
-                        <a href="{{ route('photos.index') }}" class="btn btn-primary">Back to Photos</a>
-                    </div>
                     <div class="card-body">
-                        <form action="{{ route('photos.update', $photo->id) }}" method="POST" enctype="multipart/form-data">
-                            @csrf
-                            @method('PUT')
+                        <div class="d-flex justify-content-between">
+                            <a href="{{ route('photos.index') }}" class="text-decoration-none">Back to Photos</a>
+                            <button type="button" class="btn btn-danger btn-sm" x-data="{
+                                alertConfirm() {
+                                    Swal.fire({
+                                        title: 'Are you sure?',
+                                        text: 'You won\'t be able to revert this! This will delete the photo from the system.',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonColor: '#3085d6',
+                                        cancelButtonColor: '#d33',
+                                        confirmButtonText: 'Yes'
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $('#deletePic{{ $photo->id }}').submit();
+                                        }
+                                    });
+                                }
+                            }" x-on:click="alertConfirm()">
+                                Delete this photo
+                            </button>
+                            <form id="deletePic{{ $photo->id }}" action="{{ route('photos.destroy', $photo->id) }}"
+                                method="POST" style="display: none;">
+                                @csrf
+                                @method('DELETE')
+                            </form>
+                        </div>
 
-                            <div class="mb-3">
-                                <label for="unit_id">Select Unit</label>
-                                <select name="unit_id" class="form-control" id="unit_id" required>
-                                    <option value="">-- Select Unit --</option>
-                                    @foreach($units as $unit)
-                                        <option value="{{ $unit->id }}" {{ $unit->id == old('unit_id', $photo->unit_id) ? 'selected' : '' }}>
-                                            {{ $unit->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('unit_id') 
-                                    <span class="text-danger">{{ $message }}</span> 
-                                @enderror
+                        <div class="row justify-content-center align-items-start g-2 mt-3">
+                            <div class="col-lg-6 col-md-5">
+                                <div class="d-flex justify-content-center">
+                                    <img src="{{ asset($photo->photos_path) }}" class="img-fluid object-fit-cover rounded-3">
+                                </div>
                             </div>
+                            <div class="col-lg-6 col-md-7">
+                                <form action="{{ route('photos.update', $photo->id) }}" method="POST">
+                                    @csrf
+                                    @method('PUT')
 
-                            <!-- Photo Upload -->
-                            <div class="form-group mb-3">
-                                <label for="photos_path">Update Photo</label>
-                                <input type="file" name="photos_path" id="photos_path" class="form-control @error('photos_path') is-invalid @enderror">
-                                <small>Leave blank if you don't want to change the photo.</small>
-                                @error('photos_path')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
+                                    <div class="row align-items-center g-2 mb-2">
+                                        <label for="unit_id" class="col-auto form-label mb-0">Tie image to:</label>
+                                        <div class="col-auto">
+                                            <select name="unit_id" class="form-control" id="unit_id" required>
+                                                @foreach ($units as $unit)
+                                                    <option value="{{ $unit->id }}"
+                                                        {{ $unit->id == old('unit_id', $photo->unit_id) ? 'selected' : '' }}>
+                                                        {{ $unit->name }}
+                                                    </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        @error('unit_id')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="row align-items-center mb-3">
+                                        <label for="descr" class="col-auto form-label mb-0">Description:</label>
+                                        <div class="col-auto">
+                                            <textarea name="descr" id="descr" class="form-control @error('descr') is-invalid @enderror w-100" rows="1"
+                                                required>{{ $photo->descr }}</textarea>
+                                        </div>
+                                        @error('descr')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="is_archived" id="active"
+                                            @checked(!$photo->is_archived)>
+                                        <label class="form-check-label" for="active">
+                                            Active
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="radio" name="is_archived" id="archive"
+                                            @checked($photo->is_archived)>
+                                        <label class="form-check-label" for="archive">
+                                            Archive
+                                        </label>
+                                    </div>
+                                    <div class="d-flex justify-content-end">
+                                        <button type="submit" class="btn btn-darkgreen px-3">Update Photo</button>
+                                    </div>
+                                </form>
                             </div>
+                        </div>
 
-                            <div class="form-group mb-3">
-                                <label for="descr">Description</label>
-                                <textarea name="descr" id="descr" class="form-control @error('descr') is-invalid @enderror" rows="3" required>{{ $photo->descr }}</textarea>
-                                @error('descr')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <div class="form-group mb-3">
-                                <label for="is_archived">Archive Status</label>
-                                <select name="is_archived" id="is_archived" class="form-control @error('is_archived') is-invalid @enderror" required>
-                                    <option value="0" {{ $photo->is_archived == 0 ? 'selected' : '' }}>Active</option>
-                                    <option value="1" {{ $photo->is_archived == 1 ? 'selected' : '' }}>Archived</option>
-                                </select>
-                                @error('is_archived')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
-
-                            <button type="submit" class="btn btn-primary">Update Photo</button>
-                        </form>
                     </div>
                 </div>
             </div>

@@ -45,9 +45,7 @@
                                 @endif
 
                                 <div class="col-12">
-                                    <a name="" id=""
-                                        class="btn btn-outline-secondary rounded-3 w-100 fw-medium mt-2 shadow"
-                                        href="#"role="button">Upload New Photo</a>
+                                    <a class="btn btn-outline-secondary rounded-3 w-100 fw-medium mt-2 shadow" href="{{ route('photos.create') }}">Upload New Photo</a>
                                 </div>
                             </div>
                         </div>
