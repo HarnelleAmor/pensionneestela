@@ -7,11 +7,11 @@
         <div id="carousel" class="carousel slide" data-bs-ride="carousel" data-bs-wrap="true">
             <!-- Indicators -->
             {{-- Comment: I think dito galing ung mga nagpapakita na '1. 2. 3.' sa carousel --}}
-            <ol class="carousel-indicators">
-                <li data-bs-target="#carousel" data-bs-slide-to="0" class="active"></li>
-                <li data-bs-target="#carousel" data-bs-slide-to="1"></li>
-                <li data-bs-target="#carousel" data-bs-slide-to="2"></li>
-            </ol>
+            <div class="carousel-indicators">
+                <button type="button" data-bs-target="#carousel" data-bs-slide-to="0" class="active"></button>
+                <button type="button" data-bs-target="#carousel" data-bs-slide-to="1"></button>
+                <button type="button" data-bs-target="#carousel" data-bs-slide-to="2"></button>
+            </div>
 
             
             <!-- Carousel items -->
