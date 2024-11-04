@@ -1,37 +1,38 @@
 <x-guest-layout>
     @section('content')
-    <div class="container pt-2" style="margin-top: 110px">
-        <div class="card">
-            <img class="card-img-top" src="holder.js/100x180/" alt="Title" />
-            <div class="card-body">
-                <h4 class="card-title">Title</h4>
-                <p class="card-text">Text</p>
+        <div class="container pt-2" style="margin-top: 110px">
+            <div class="card col-lg-6 col-md-6 rounded-3 mx-auto">
+                <div class="card-body">
+                    <p class="card-text fw-medium">
+                        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+                    </p>
+
+                    <form method="POST" action="{{ route('password.email') }}">
+                        @csrf
+
+                        <div class="row mb-3">
+                            <label for="email" class="col-sm-2 text-center col-form-label">Email</label>
+                            <div class="col-sm-10">
+                                <input type="email" class="form-control" name="email" id="email" placeholder=""
+                                    required autofocus />
+                                @error('email')
+                                    <small class="form-text text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-end align-items-center">
+                            <button type="submit" class="btn btn-darkgreen">
+                                {{ __('Email Password Reset Link') }}
+                            </button>
+                        </div>
+                    </form>
+                </div>
             </div>
-        </div>
-        
-    </div>
-    <div class="mb-4 text-sm text-gray-600">
-        {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
-    </div>
 
-    <!-- Session Status -->
-    <x-auth-session-status class="mb-4" :status="session('status')" />
-
-    <form method="POST" action="{{ route('password.email') }}">
-        @csrf
-
-        <!-- Email Address -->
-        <div>
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
 
-        <div class="flex items-center justify-end mt-4">
-            <x-primary-button>
-                {{ __('Email Password Reset Link') }}
-            </x-primary-button>
-        </div>
-    </form>
+        <!-- Session Status -->
+        <x-auth-session-status class="mb-4" :status="session('status')" />
     @endsection
 </x-guest-layout>

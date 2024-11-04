@@ -54,7 +54,7 @@
                             Dashboard
                         </a>
                     </li>
-                    <li class="nav-item mb-2">
+                    {{-- <li class="nav-item mb-2">
                         <a class="btn btn-outline-sage border-0 rounded-3 gap-3 w-100 icon-link fs-6 fw-semibold"
                             href="{{ route('notifs.index') }}" data-leave-check="true">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
@@ -62,7 +62,7 @@
                               </svg>
                             Notifications
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item mb-2">
                         <a class="btn btn-outline-sage border-0 rounded-3 gap-3 w-100 icon-link fs-6 fw-semibold"
                             href="{{ route('bookings.index') }}" data-leave-check="true">

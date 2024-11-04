@@ -11,7 +11,7 @@ use Illuminate\Notifications\Messages\BroadcastMessage;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class BookingCreatedNotification extends Notification
+class BookingCancelledNotification extends Notification
 {
     use Queueable;
 
@@ -33,7 +33,6 @@ class BookingCreatedNotification extends Notification
      */
     public function via(object $notifiable): array
     {
-        // return ['mail'];
         if ($notifiable instanceof AnonymousNotifiable) {
             // Only send the notification via mail for anonymous notifiables
             return ['mail'];
@@ -70,22 +69,9 @@ class BookingCreatedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Booking Creation - ' . $this->booking->unit->name)
-            // ->greeting('Hello ' . $this->booking->first_name . ',')
-            // ->line('We are pleased to inform you that your booking has been successfully created!')
-            // ->line('**Booking Details:**')
-            // ->line('**Booking ID:** #' . $this->booking->reference_no)
-            // ->line('**Check-in Date:** ' . Carbon::parse($this->booking->checkin_date)->format('M j, Y'))
-            // ->line('**Check-out Date:** ' . Carbon::parse($this->booking->checkout_date)->format('M j, Y'))
-            // ->line('**Number of Guests:** ' . $this->booking->no_of_guests)
-            // ->line('**Total Payment:** PHP' . number_format($this->booking->total_payment, 2))
-            // ->line('Thank you for choosing Pensionne Estela! We look forward to hosting you.')
-            // ->action('View Your Booking', url('/bookings/' . $this->booking->id))
-            // ->salutation('Warm regards,')
-            // ->line(config('app.name'))
-            ->markdown('mail.booking.created', ['booking' => $this->booking]); // Pass booking data;
+            ->subject('Booking Cancelled - ' . $this->booking->unit->name)
+            ->markdown('mail.booking.cancelled');
     }
-
 
     /**
      * Get the array representation of the notification.
@@ -114,7 +100,7 @@ class BookingCreatedNotification extends Notification
      */
     public function databaseType(object $notifiable): string
     {
-        return 'booking-created';
+        return 'booking-cancelled';
     }
 
     /**
@@ -137,6 +123,6 @@ class BookingCreatedNotification extends Notification
      */
     public function broadcastType(): string
     {
-        return 'booking-created';
+        return 'booking-cancelled';
     }
 }

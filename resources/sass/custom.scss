@@ -195,3 +195,32 @@ $darkgreen-dark: #021213;
 .btn-hover-color-blackbean {
     --bs-btn-hover-color: #{$blackbean};
 }
+
+.nav-darkgreen {
+    --bs-nav-link-padding-x: 1rem;
+    --bs-nav-link-padding-y: 0.5rem;
+    --bs-nav-link-font-weight: ;
+    --bs-nav-link-color: var($darkgreen);
+    --bs-nav-link-hover-color: var($darkgreen-dark);
+    --bs-nav-link-disabled-color: var(--bs-secondary-color);
+    display: flex;
+    flex-wrap: wrap;
+    padding-left: 0;
+    margin-bottom: 0;
+    list-style: none;
+}
+  
+
+.nav-pills-darkgreen {
+    --bs-nav-pills-border-radius: var(--bs-border-radius);
+    --bs-nav-pills-link-active-color: #{$sage-light};
+    --bs-nav-pills-link-active-bg: #{$darkgreen};
+  }
+  .nav-pills-darkgreen .nav-link {
+    border-radius: var(--bs-nav-pills-border-radius);
+  }
+  .nav-pills-darkgreen .nav-link.active,
+  .nav-pills-darkgreen .show > .nav-link {
+    color: var(--bs-nav-pills-link-active-color);
+    background-color: var(--bs-nav-pills-link-active-bg);
+}

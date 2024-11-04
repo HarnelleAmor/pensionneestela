@@ -15,16 +15,16 @@
             <ul class="navbar-nav mx-auto text-center">
                 <!-- Other navigation links -->
                 <li class="nav-item px-2 py-2 navitem-custom">
-                    <a class="nav-link text-uppercase text-dark navlink-custom" href="#home">Home</a>
+                    <a class="nav-link text-uppercase text-dark navlink-custom" href="{{ request()->is('/') ? '' : '/' }}#home">Home</a>
                 </li>
                 <li class="nav-item px-2 py-2 navitem-custom">
-                    <a class="nav-link text-uppercase text-dark navlink-custom" href="#units">Units</a>
+                    <a class="nav-link text-uppercase text-dark navlink-custom" href="{{ request()->is('/') ? '' : '/' }}#units">Units</a>
                 </li>
                 <li class="nav-item px-2 py-2 navitem-custom">
-                    <a class="nav-link text-uppercase text-dark navlink-custom" href="#gallery">Gallery</a>
+                    <a class="nav-link text-uppercase text-dark navlink-custom" href="{{ request()->is('/') ? '' : '/' }}#gallery">Gallery</a>
                 </li>
                 <li class="nav-item px-2 py-2 navitem-custom">
-                    <a class="nav-link text-uppercase text-dark navlink-custom " href="#aboutus">About</a>
+                    <a class="nav-link text-uppercase text-dark navlink-custom " href="{{ request()->is('/') ? '' : '/' }}#aboutus">About</a>
                 </li>
             </ul>
             

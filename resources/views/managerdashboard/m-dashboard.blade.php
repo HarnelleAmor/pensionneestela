@@ -60,11 +60,26 @@
                 </div>
             </div>
             <div class="col-lg-3">
+                <div class="card card-body bg-mossgreen text-darkgreen border-0 rounded-4 shadow d-flex flex-row gap-3 justify-content-start px-4 align-items-center">
+                    <div class="rounded-4 p-3 d-flex align-items-end bg-darkgreen text-sage-light"
+                        style="background-color: var(--bs-secondary-bg);">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-x" viewBox="0 0 16 16">
+                            <path d="M6.146 7.146a.5.5 0 0 1 .708 0L8 8.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 9l1.147 1.146a.5.5 0 0 1-.708.708L8 9.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 9 6.146 7.854a.5.5 0 0 1 0-.708"/>
+                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
+                          </svg>
+                    </div>
+                    <div>
+                        <p class="fw-medium mb-0 small">Request to Cancel</p>
+                        <p class="mb-0 fs-2 mt-n2">{{ $for_approvals->count() }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3">
                 <div class="card card-body bg-blackbean text-sage-light border-0 rounded-4 shadow d-flex flex-row gap-3 justify-content-start px-4 align-items-center">
                     <div class="rounded-4 p-3 d-flex align-items-end bg-sage-light text-darkgreen"
                         style="background-color: var(--bs-secondary-bg);">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                            class="bi bi-people-fill me-1" viewBox="0 0 16 16">
+                            class="bi bi-people-fill" viewBox="0 0 16 16">
                             <path
                                 d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
                         </svg>
@@ -97,22 +112,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-lg-3">
-                <div class="card card-body bg-mossgreen text-darkgreen border-0 rounded-4 shadow d-flex flex-row gap-3 justify-content-start px-4 align-items-center">
-                    <div class="rounded-4 p-3 d-flex align-items-end bg-darkgreen text-sage-light"
-                        style="background-color: var(--bs-secondary-bg);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                            class="bi bi-people-fill me-1" viewBox="0 0 16 16">
-                            <path
-                                d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5" />
-                        </svg>
-                    </div>
-                    <div>
-                        <p class="fw-medium mb-0 small">Customers</p>
-                        <p class="mb-0 fs-2 mt-n2">{{ $total_customers }}</p>
-                    </div>
-                </div>
-            </div>
+            
         </div>
 
         <div class="row justify-content-evenly align-items-start mb-3 g-3">
@@ -244,7 +244,7 @@
             </div>
         </div>
 
-        <div class="row align-items-start mb-3 g-3">
+        {{-- <div class="row align-items-start mb-3 g-3">
             <div class="col-lg-12">
                 <div class="card border-0 rounded-4 shadow" style="height: 30rem">
                     <div class="card-header rounded-top-4 d-flex justify-content-between align-items-center">
@@ -486,7 +486,7 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div> --}}
 
     </div>
 

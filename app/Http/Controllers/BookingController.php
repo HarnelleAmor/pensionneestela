@@ -269,15 +269,28 @@ class BookingController extends Controller
         $outstanding_pay = $booking->total_payment - $downpayment;
 
         $booking->fill([
-            'status' => 'pending',
+            'status' =>  Gate::allows('is-manager') ? 'confirmed' : 'pending',
             'outstanding_payment' => $outstanding_pay,
             'gcash_ref_no' => $request->ref_no == 'cash' ? null : $request->ref_no
         ]);
-        // dd($booking->toArray());
-        $bookingDataArray = $booking->toArray();
+
         try {
-            DB::transaction(function () use ($bookingDataArray, $selectedServices) {
-                $newBooking = Booking::create($bookingDataArray);
+            DB::transaction(function () use ($booking, $selectedServices, $request) {
+                $newBooking = Booking::create([
+                    'unit_id' => $booking->unit_id,
+                    'user_id' => $booking->user_id,
+                    'checkin_date' => $booking->checkin_date,
+                    'checkout_date' => $booking->checkout_date,
+                    'first_name' => $booking->first_name,
+                    'last_name' => $booking->last_name,
+                    'email' => $booking->email,
+                    'phone_no' => $booking->phone_no,
+                    'no_of_guests' => $booking->no_of_guests,
+                    'total_payment' => $booking->total_payment,
+                    'status' => $booking->status,
+                    'outstanding_payment' => $booking->outstanding_payment,
+                    'gcash_ref_no' => $booking->gcash_ref_no,
+                ]);
 
                 if (!empty($selectedServices)) {
                     foreach ($selectedServices as $service) {
@@ -289,21 +302,22 @@ class BookingController extends Controller
                 }
 
                 BookingCreated::dispatch($newBooking);
+
+                $request->session()->forget(['booking', 'selectedServices', 'booking_downpayment', 'sessionServices']);
+
+                BookingQueue::where('user_id', Auth::id())->delete();
+
+                if (Gate::allows('is-manager')) {
+                    Alert::success('Booking Created!', 'Booking #'.$newBooking->reference_no.' is created and confirmed.');
+                    return redirect()->route('managerdashboard');
+                } else {
+                    Alert::success('Booking Created!', 'You\'re booking is created successfully. Let\'s wait for the staff to confirm your booking.');
+                    return redirect()->route('customerdashboard');
+                }
             }, 2);
         } catch (\Exception $e) {
-            return back()->withInput()->with('error', 'Something went wrong in making the booking. ' . $e->getMessage());
-        }
-
-        $request->session()->forget(['booking', 'selectedServices', 'booking_downpayment', 'sessionServices']);
-
-        BookingQueue::where('user_id', Auth::id())->delete();
-
-        Alert::success('Booking Created!', 'You\'re booking is created successfully. Let\'s wait for the staff to confirm your booking.');
-
-        if (Gate::allows('is-manager')) {
-            return redirect()->route('managerdashboard')->with('success', 'A booking is successfully made.');
-        } else {
-            return redirect()->route('customerdashboard')->with('success', 'Your booking is successfully made. Please wait for it\'s confirmation.');
+            Alert::error('Error!', 'Something went wrong in making the booking. ' . $e->getMessage());
+            return back()->withInput();
         }
     }
 
@@ -468,9 +482,11 @@ class BookingController extends Controller
         }
 
         if ($booking->save()) {
+            Alert::success('Success', 'Booking #'.$booking->reference_no.' is cancelled.');
             return redirect()->back();
         } else {
-            return back()->with('error', 'Something went wrong in the cancellation process.');
+            Alert::success('Error', 'Something went wrong in cancelling #'.$booking->reference_no.'.');
+            return back()->withInput();
         }
     }
 
