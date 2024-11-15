@@ -19,7 +19,7 @@
         @vite(['resources/sass/app.scss', 'resources/js/app.js', 'resources/js/custom.js'])
     </head>
     <body class="font-sans antialiased">
-        @include('sweetalert::alert')
+        
 
         @if (session('success'))
             <script type="module">
@@ -50,6 +50,7 @@
                 @yield('content')
             </div>
         @include('layouts.footer')
+        @include('sweetalert::alert')
         @stack('scripts')
     </body>
 </html>

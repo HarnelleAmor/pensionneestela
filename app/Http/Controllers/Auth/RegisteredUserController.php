@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class RegisteredUserController extends Controller
 {
@@ -47,6 +48,8 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('customerdashboard', absolute: false));
+        alert()->success('Account Created!', 'Welcome! This is your dashboard, where you can book units and see your booking records.')->showConfirmButton('Nice', '#3085d6');
+
+        return redirect(route('customerdashboard'));
     }
 }

@@ -2,7 +2,7 @@
 @section('page', 'Accounts')
 @section('content')
     <div class="container">
-        <div class="card shadow-sm mt-2">
+        <div class="card shadow-sm mt-2 mb-3">
             <div class="card-header bg-darkgreen d-flex justify-content-between align-items-center">
                 <h5 class="mb-0 text-white">Manage Accounts</h5>
                 <div>
@@ -12,7 +12,19 @@
                 </div>
             </div>
             <div class="card-body">
-                <p>Total Number of Users: {{ $accounts->count() }}</p>
+                @if ($errors->any())
+                    <div class="d-flex justify-content-center">
+                        <div class="d-inline-flex alert alert-danger">
+                            <p class="mb-0 fw-medium">Form error:</p>
+                            <ul class="mb-0">
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    </div>
+                @endif
+                <p class="mb-0">Total Number of Users: {{ $accounts->count() }}</p>
                 <!-- User Table -->
                 <div class="table-responsive">
                     <table id="customers" class="table table-hover mb-0">
@@ -36,11 +48,12 @@
                                         @else
                                             <small class="fst-italic text-muted">No number</small>
                                         @endif
-                                        
+
                                     </td>
                                     <td class="text-nowrap">{{ ucfirst($account->usertype) }}</td>
                                     <td class="d-flex text-nowrap">
-                                        <a href="{{ route('accounts.show', $account->id) }}" class="btn btn-darkgreen"><i class="bi bi-person-circle"></i> See Profile </a>
+                                        <a href="{{ route('accounts.show', $account->id) }}" class="btn btn-darkgreen"><i
+                                                class="bi bi-person-circle"></i> See Profile </a>
                                     </td>
                                 </tr>
                             @endforeach
@@ -54,7 +67,7 @@
 
     @push('scripts')
         <script type="module">
-            $(document).ready(function () {
+            $(document).ready(function() {
                 $('#customers').DataTable();
             });
         </script>
@@ -71,39 +84,82 @@
                     <h5 class="modal-title" id="addUserModalLabel">Add New User</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                    <!-- Add User Form -->
-                    <form>
-                        <div class="mb-3">
-                            <label for="firstName" class="form-label">First Name</label>
-                            <input type="text" class="form-control" id="firstName" placeholder="Enter First Name">
+                <form method="POST" action="{{ route('accounts.store') }}">
+                    <div class="modal-body">
+                        @csrf
+                        <div class="row justify-content-center align-items-center g-4 mb-3">
+                            <div class="col-sm-6">
+                                <label for="firstName" class="form-label mb-0">First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="first_name"
+                                    placeholder="Enter First Name" value="{{ old('first_name') }}" required>
+                                @error('first_name')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="lastName" class="form-label mb-0">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="last_name"
+                                    placeholder="Enter Last Name" value="{{ old('last_name') }}" required>
+                                @error('last_name')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="d-flex justify-content-between">
+                                    <label for="email" class="form-label mb-0">Email</label>
+                                    <div class="form-check small">
+                                        <input class="form-check-input" type="checkbox" value="1" id="verify_email" name="verify_email" {{ old('verify_email') == '1' ? 'checked' : '' }} />
+                                        <label class="form-check-label text-secondary" for="verify_email"> Verify Now
+                                        </label>
+                                    </div>
+                                </div>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="Enter Email" value="{{ old('email') }}" required>
+                                @error('email')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="col-sm-6">
+                                <label for="phone" class="form-label mb-0">Phone Number</label>
+                                <input type="number" class="form-control" id="phone" name="phone_no"
+                                    placeholder="Format: 09*********" value="{{ old('phone_no') }}" required>
+                                @error('phone_no')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="col-sm-8">
+                                <label for="password" class="form-label mb-0">Password</label>
+                                <input type="password" class="form-control" name="password" id="password" required />
+                                @error('password')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
+                            <div class="col-sm-4">
+                                <label for="usertype" class="form-label mb-0">User Role</label>
+                                <select class="form-select" name="usertype" id="usertype" required>
+                                    <option value="customer" {{ old('usertype') == 'customer' ? 'selected' : '' }}>
+                                        Customer
+                                    </option>
+                                    <option value="manager" {{ old('usertype') == 'manager' ? 'selected' : '' }}>
+                                        Manager
+                                    </option>
+                                </select>
+                                @error('usertype')
+                                    <small class="text-danger">{{ $message }}</small>
+                                @enderror
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="lastName" class="form-label">Last Name</label>
-                            <input type="text" class="form-control" id="lastName" placeholder="Enter Last Name">
+                        <div class="">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="active" name="active" value="1" {{ old('active', 1) == 1 ? 'checked' : '' }} />
+                                <label class="form-check-label" for="active">Active</label>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" placeholder="Enter Email">
-                        </div>
-                        <div class="mb-3">
-                            <label for="phone" class="form-label">Phone Number</label>
-                            <input type="text" pattern="\d*" class="form-control" id="phone"
-                                placeholder="Enter Phone Number">
-                        </div>
-                        <div class="mb-3">
-                            <label for="usertype" class="form-label">User Role</label>
-                            <select class="form-select" name="usertype" id="usertype">
-                                <option value="customer" selected>Customer</option>
-                                <option value="manager">Manager</option>
-                            </select>
-                        </div>
-
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary">Add User</button>
-                </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-darkgreen">Add User</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>

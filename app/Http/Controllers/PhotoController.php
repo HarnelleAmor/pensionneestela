@@ -16,9 +16,11 @@ class PhotoController extends Controller
     public function index()
     {
         Gate::authorize('is-manager');
-        $photos = Photo::with('unit')->get(); 
+        // Retrieve photos ordered by the latest created first
+        $photos = Photo::with('unit')->orderBy('created_at', 'desc')->get();
         return view('photos.index', compact('photos'));
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -26,9 +28,11 @@ class PhotoController extends Controller
     public function create()
     {
         Gate::authorize('is-manager');
-        $units = Unit::all(); // Fetch all units
+        // Fetch all units ordered by the most recently created
+        $units = Unit::orderBy('created_at', 'desc')->get();
         return view('photos.create', compact('units'));
     }
+
 
     /**
      * Store a newly created resource in storage.
@@ -36,14 +40,17 @@ class PhotoController extends Controller
     public function store(Request $request)
     {
         Gate::authorize('is-manager');
+
+        // Validate the incoming request
         $request->validate([
-            'unit_id' => 'required|exists:units,id', 
-            'photos_path' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'unit_id' => 'required|exists:units,id',
+            'photos_path' => 'required|image|mimes:jpeg,png,jpg,gif', // Change max to 5000 KB (5 MB)
             'descr' => 'required|string|max:255',
         ]);
 
         $data = new Photo();
 
+        // Handle the file upload
         if ($request->hasFile('photos_path')) {
             $image = $request->file('photos_path');
 
@@ -53,18 +60,21 @@ class PhotoController extends Controller
             // Store image in the public folder (photos)
             $image->move(public_path('assets/images'), $imagename);
 
-            // Store image name in the database table
+            // Store image path in the database
             $data->photos_path = 'assets/images/' . $imagename;
         }
 
+        // Assign other fields
         $data->unit_id = $request->unit_id;
         $data->descr = $request->descr;
 
         // Save the data to the database
         $data->save();
 
-        return redirect()->route('photos.index')->with('success', 'Photo added successfully!');
+        Alert::success('Success', 'Photo added successfully!');
+        return redirect()->back();
     }
+
 
     /**
      * Display the specified resource.
@@ -93,6 +103,7 @@ class PhotoController extends Controller
     {
         Gate::authorize('is-manager');
         $photo = Photo::findOrFail($id);
+
         $photo->update($request->only(['unit_id', 'descr', 'is_archived']));
 
         if ($request->hasFile('photos_path')) {
@@ -100,8 +111,10 @@ class PhotoController extends Controller
             $photo->update(['photos_path' => $path]);
         }
 
-        return redirect()->route('photos.index')->with('success', 'Photo updated successfully.');
+        Alert::success('Success', 'Photo updated successfully.');
+        return redirect()->back();
     }
+
 
     /**
      * Remove the specified resource from storage.
@@ -111,12 +124,14 @@ class PhotoController extends Controller
         Gate::authorize('is-manager');
         $photo = Photo::findOrFail($id);
 
+        // Attempt to delete the photo
         if ($photo->delete()) {
             Alert::success('Success', 'Photo successfully deleted.');
-            return redirect()->back();
         } else {
-            Alert::error('Error', 'There was an error deleting the photo');
-            return redirect()->back();
+            Alert::error('Error', 'There was an error deleting the photo.');
         }
+
+        // Redirect to the photos index page
+        return redirect()->back();
     }
 }

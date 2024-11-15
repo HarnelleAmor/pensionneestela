@@ -192,23 +192,24 @@
                         <table id="upcomingBookings" class="table">
                             <thead>
                                 <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Status</th>
-                                    <th scope="col">Unit</th>
-                                    <th scope="col">Check In</th>
-                                    <th scope="col">Check Out</th>
+                                    <th scope="col" class="text-nowrap">ID</th>
+                                    <th scope="col" class="text-nowrap">Status</th>
+                                    <th scope="col" class="text-nowrap">Unit</th>
+                                    <th scope="col" class="text-nowrap">Check In</th>
+                                    <th scope="col" class="text-nowrap">Check Out</th>
+                                    <th scope="col" class="text-nowrap">Date Created</th>
                                     <th scope="col" class="text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse ($upcoming_bookings as $booking)
                                     <tr class="">
-                                        <td>
+                                        <td class="text-nowrap">
                                             <a href="{{route('bookings.show', $booking)}}" class="text-decoration-none">
                                                 #{{ $booking->reference_no }}
                                             </a>
                                         </td>
-                                        <td>
+                                        <td class="text-nowrap">
                                             @if ($booking->status == 'pending' && is_null($booking->reason_of_cancel))
                                                 <span class="badge text-bg-warning">Pending</span>
                                             @elseif ($booking->status == 'confirmed' && is_null($booking->reason_of_cancel))
@@ -217,12 +218,14 @@
                                                 <span class="badge text-bg-warning">Awaiting cancellation approval</span>
                                             @endif
                                         </td>
-                                        <td>{{ $booking->unit->name }}</td>
-                                        <td>{{ date('M j, Y', strtotime($booking->checkin_date)) }}</td>
-                                        <td>{{ date('M j, Y', strtotime($booking->checkout_date)) }}</td>
-                                        <td class="d-flex justify-content-center align-items-center">
+                                        <td class="text-nowrap">{{ $booking->unit->name }}</td>
+                                        <td class="text-nowrap">{{ date('M j, Y', strtotime($booking->checkin_date)) }}</td>
+                                        <td class="text-nowrap">{{ date('M j, Y', strtotime($booking->checkout_date)) }}</td>
+                                        <td class="text-nowrap">{{ date('h:i A - M j, Y', strtotime($booking->created_at)) }}</td>
+                                        <td class="">
                                             @if (is_null($booking->reason_of_cancel))
-                                                <button class="btn btn-danger btn-sm mx-auto" data-bs-toggle="modal" data-bs-target="#cancelBookingModal{{ $booking->id }}">
+                                                <button type="button" class="btn btn-primary btn-sm w-100 mb-2" data-bs-toggle="modal" data-bs-target="#rebookBookingModal{{ $booking->id }}">Reschedule</button>
+                                                <button class="btn btn-danger btn-sm w-100" data-bs-toggle="modal" data-bs-target="#cancelBookingModal{{ $booking->id }}">
                                                     Cancel
                                                 </button>
                                                 <div class="modal fade" id="cancelBookingModal{{ $booking->id }}" tabindex="-1"
@@ -234,23 +237,42 @@
                                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                                             </div>
                                                             <div class="modal-body">
-                                                                <p class="fw-semibold">This action cannot be undone.</p>
+                                                                <p class="fw-semibold">Bookings may be canceled. Please note that the downpayment is non-refundable. Guests have the option to reschedule their booking within a year. For more information, please refer to our <a href="{{ route('terms-conditions') }}" class="text-decoration-none">Terms and Conditions</a>.</p>
                                                                 <form method="POST"
                                                                     action="{{ route('booking.cancel', ['booking' => $booking->id]) }}">
                                                                     @csrf
                                                                     @method('PATCH')
                                                                     <textarea class="form-control" name="cancellation_reason" rows="3" placeholder="State your reason here..."
                                                                         required></textarea>
-                                                                    <small class="d-block mt-2">If you'd like for a rebooking, you can specify
-                                                                        it here. Please wait for staff confirmation.</small>
-                                                                    <p class="mt-2">Contact us for inquiries: <br>
+                                                                    <small class="d-block mt-2">Your request will be checked by our staff and we'll notify you through your email provided in the booking form and/or your account's email.</small>
+                                                                    <p class="mt-2">For inquiries, contact us through: <br>
                                                                         <a href="mailto:pensionneestella@gmail.com"
                                                                             class="link-primary">pensionneestella@gmail.com</a> <br>
                                                                         <a href="tel:470-944-7433" class="link-primary">470-944-7433</a>
                                                                     </p>
-                                                                    <button type="submit" class="btn btn-danger mt-2">Cancel this
+                                                                    <div class="d-flex justify-content-end">
+                                                                        <button type="submit" class="btn btn-darkgreen mt-2">Cancel this
                                                                         booking</button>
+                                                                    </div>
                                                                 </form>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal fade" id="rebookBookingModal{{ $booking->id }}" tabindex="-1"
+                                                    aria-labelledby="rebookBookingModal{{ $booking->id }}Label" aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header bg-info">
+                                                                <h5 class="modal-title fw-bold">Reschedule this booking?</h5>
+                                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <p class="fw-medium">Current bookings can be rescheduled within a year upon request to accommodate changes in plans.</p>
+                                                                <p class="">Rescheduling is free, and is subject to available dates of each unit. The original downpayment will be transferred to the rescheduled booking. Any additional charges will be settled during time of check-in or check-out.</p>
+                                                                <div class="d-flex justify-content-center">
+                                                                    <a href="{{route('rebooking.formCreate', $booking)}}" class="btn btn-darkgreen mt-2 px-4">Proceed</a>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -317,7 +339,9 @@
     @push('scripts')
         <script type="module">
             $(document).ready(function () {
-                $('#upcomingBookings').DataTable();
+                $('#upcomingBookings').DataTable({
+                    scrollY: '50vh',
+                });
             });
         </script>
     @endpush

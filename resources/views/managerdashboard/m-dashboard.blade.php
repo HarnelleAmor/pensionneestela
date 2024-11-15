@@ -44,7 +44,8 @@
 
         <div class="row justify-content-center align-items-center mb-3 g-3">
             <div class="col-lg-3">
-                <div class="card card-body bg-sage text-blackbean border-0 rounded-4 shadow d-flex flex-row gap-3 justify-content-start px-4 align-items-center">
+                <div
+                    class="card card-body bg-sage text-blackbean border-0 rounded-4 shadow d-flex flex-row gap-3 justify-content-start px-4 align-items-center">
                     <div class="rounded-4 p-3 d-flex align-items-end bg-blackbean text-sage-light"
                         style="background-color: var(--bs-secondary-bg);">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -54,28 +55,33 @@
                         </svg>
                     </div>
                     <div>
-                        <p class="fw-medium mb-0 small">New Booking</p>
+                        <p class="fw-medium mb-0 small">New Bookings</p>
                         <p class="mb-0 fs-2 mt-n2">{{ $pending_bookings->count() }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3">
-                <div class="card card-body bg-mossgreen text-darkgreen border-0 rounded-4 shadow d-flex flex-row gap-3 justify-content-start px-4 align-items-center">
+                <div
+                    class="card card-body bg-mossgreen text-darkgreen border-0 rounded-4 shadow d-flex flex-row gap-3 justify-content-start px-4 align-items-center">
                     <div class="rounded-4 p-3 d-flex align-items-end bg-darkgreen text-sage-light"
                         style="background-color: var(--bs-secondary-bg);">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-calendar-x" viewBox="0 0 16 16">
-                            <path d="M6.146 7.146a.5.5 0 0 1 .708 0L8 8.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 9l1.147 1.146a.5.5 0 0 1-.708.708L8 9.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 9 6.146 7.854a.5.5 0 0 1 0-.708"/>
-                            <path d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z"/>
-                          </svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
+                            class="bi bi-calendar-x" viewBox="0 0 16 16">
+                            <path
+                                d="M6.146 7.146a.5.5 0 0 1 .708 0L8 8.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 9l1.147 1.146a.5.5 0 0 1-.708.708L8 9.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 9 6.146 7.854a.5.5 0 0 1 0-.708" />
+                            <path
+                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5M1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4z" />
+                        </svg>
                     </div>
                     <div>
-                        <p class="fw-medium mb-0 small">Request to Cancel</p>
+                        <p class="fw-medium mb-0 small">To Cancel Bookings</p>
                         <p class="mb-0 fs-2 mt-n2">{{ $for_approvals->count() }}</p>
                     </div>
                 </div>
             </div>
             <div class="col-lg-3">
-                <div class="card card-body bg-blackbean text-sage-light border-0 rounded-4 shadow d-flex flex-row gap-3 justify-content-start px-4 align-items-center">
+                <div
+                    class="card card-body bg-blackbean text-sage-light border-0 rounded-4 shadow d-flex flex-row gap-3 justify-content-start px-4 align-items-center">
                     <div class="rounded-4 p-3 d-flex align-items-end bg-sage-light text-darkgreen"
                         style="background-color: var(--bs-secondary-bg);">
                         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
@@ -106,16 +112,18 @@
                             <path d="M9.998 5.083 10 5a2 2 0 1 0-3.132 1.65 6 6 0 0 1 3.13-1.567" />
                         </svg>
                     </div>
-                    <div>
+                    <div class="">
                         <p class="fw-medium mb-0 small">Total Revenue</p>
-                        <p class="mb-0 fs-2 mt-n2">&#8369;{{ number_format($total_revenue, 2) }}</p>
+                        <p class="mb-0 fs-2 mt-n2">
+                            &#8369;{{ number_format($total_revenue >= 1000 ? round($total_revenue / 1000) : $total_revenue, 0) }}{{ $total_revenue >= 1000 ? 'k' : '' }}
+                        </p>
                     </div>
                 </div>
             </div>
-            
+
         </div>
 
-        <div class="row justify-content-evenly align-items-start mb-3 g-3">
+        <div class="row justify-content-evenly align-items-start mb-3 g-3" style="height: 65vh">
             <div class="col-lg-4">
                 <div class="card border-0 rounded-4 shadow">
                     <div class="card-body">
@@ -141,14 +149,17 @@
                                 const donutTotal = {
                                     id: 'donutTotal',
                                     beforeDatasetsDraw(chart, args, pluginOptions) {
-                                        const { ctx, data } = chart;
+                                        const {
+                                            ctx,
+                                            data
+                                        } = chart;
                                         ctx.save();
                                         const xCoor = chart.getDatasetMeta(0).data[0].x;
                                         const yCoor = chart.getDatasetMeta(0).data[0].y;
                                         ctx.font = 'bold 2rem Figtree';
                                         ctx.textAlign = 'center';
                                         ctx.textBaseline = 'middle';
-                                        ctx.fillText('{{ $donut_bookings["total"] }}', xCoor, yCoor);
+                                        ctx.fillText('{{ $donut_bookings['total'] }}', xCoor, yCoor);
                                     }
                                 };
                                 new Chart(ctx, {
@@ -187,9 +198,11 @@
                     <div class="card-body">
                         @foreach ($units as $unit)
                             @if ($unit->is_available)
-                                <div class="alert alert-warning d-flex align-items-center border-0 rounded-4" role="alert">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                        class="bi bi-door-open flex-shrink-0 ms-2 me-3" viewBox="0 0 16 16">
+                                <div class="alert alert-warning d-flex align-items-center border-0 rounded-4"
+                                    role="alert">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        fill="currentColor" class="bi bi-door-open flex-shrink-0 ms-2 me-3"
+                                        viewBox="0 0 16 16">
                                         <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1" />
                                         <path
                                             d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z" />
@@ -199,8 +212,9 @@
                             @else
                                 <div class="alert alert-primary d-flex align-items-center border-0 rounded-4"
                                     role="alert">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                        class="bi bi-door-closed flex-shrink-0 ms-2 me-3" viewBox="0 0 16 16">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
+                                        fill="currentColor" class="bi bi-door-closed flex-shrink-0 ms-2 me-3"
+                                        viewBox="0 0 16 16">
                                         <path
                                             d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3zm1 13h8V2H4z" />
                                         <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0" />
@@ -213,34 +227,66 @@
                 </div>
             </div>
             <div class="col-lg-4">
-                <div class="card border-0 rounded-4 shadow">
+                <div class="card border-0 rounded-4 shadow mb-2">
                     <div class="card-body">
-                        @foreach ($units as $unit)
-                            @if ($unit->is_available)
-                                <div class="alert alert-warning d-flex align-items-center border-0 rounded-4" role="alert">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                        class="bi bi-door-open flex-shrink-0 ms-2 me-3" viewBox="0 0 16 16">
-                                        <path d="M8.5 10c-.276 0-.5-.448-.5-1s.224-1 .5-1 .5.448.5 1-.224 1-.5 1" />
-                                        <path
-                                            d="M10.828.122A.5.5 0 0 1 11 .5V1h.5A1.5 1.5 0 0 1 13 2.5V15h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3V1.5a.5.5 0 0 1 .43-.495l7-1a.5.5 0 0 1 .398.117M11.5 2H11v13h1V2.5a.5.5 0 0 0-.5-.5M4 1.934V15h6V1.077z" />
-                                    </svg>
-                                    <p class="mb-0 fw-medium">{{ $unit->name }} is <strong>vacant</strong> today.</p>
-                                </div>
-                            @else
-                                <div class="alert alert-primary d-flex align-items-center border-0 rounded-4"
-                                    role="alert">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor"
-                                        class="bi bi-door-closed flex-shrink-0 ms-2 me-3" viewBox="0 0 16 16">
-                                        <path
-                                            d="M3 2a1 1 0 0 1 1-1h8a1 1 0 0 1 1 1v13h1.5a.5.5 0 0 1 0 1h-13a.5.5 0 0 1 0-1H3zm1 13h8V2H4z" />
-                                        <path d="M9 9a1 1 0 1 0 2 0 1 1 0 0 0-2 0" />
-                                    </svg>
-                                    <p class="mb-0 fw-medium">{{ $unit->name }} is <strong>occupied</strong> today.</p>
-                                </div>
-                            @endif
-                        @endforeach
+                        <canvas id="bookingTrendsChart"></canvas>
+                        @push('scripts')
+                            <script type="module">
+                                document.addEventListener('DOMContentLoaded', () => {
+                                    const ctx = document.getElementById('bookingTrendsChart').getContext('2d');
+                                    const bookingTrendsChart = new Chart(ctx, {
+                                        type: 'line',
+                                        data: {
+                                            labels: @json($line_bookingTrends['labels']),
+                                            datasets: [{
+                                                label: 'Bookings Per Month',
+                                                data: @json($line_bookingTrends['data']),
+                                                borderColor: 'rgba(75, 192, 192, 1)',
+                                                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                                                borderWidth: 2,
+                                                tension: 0.3 // Smooth the line
+                                            }]
+                                        },
+                                        options: {
+                                            responsive: true,
+                                            plugins: {
+                                                legend: {
+                                                    display: true,
+                                                    position: 'top',
+                                                },
+                                                tooltip: {
+                                                    mode: 'index',
+                                                    intersect: false,
+                                                },
+                                            },
+                                            scales: {
+                                                x: {
+                                                    title: {
+                                                        display: true,
+                                                        text: 'Month'
+                                                    }
+                                                },
+                                                y: {
+                                                    title: {
+                                                        display: true,
+                                                        text: '# of Bookings'
+                                                    },
+                                                    beginAtZero: true
+                                                }
+                                            }
+                                        }
+                                    });
+                                });
+                            </script>
+                        @endpush
                     </div>
                 </div>
+                <div class="card border-0 rounded-4 shadow">
+                    <div class="card-body">
+                        
+                    </div>
+                </div>
+                
             </div>
         </div>
 
@@ -490,5 +536,5 @@
 
     </div>
 
-    
+
 @endsection

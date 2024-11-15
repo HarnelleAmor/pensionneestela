@@ -113,15 +113,19 @@
                                             Confirm booking
                                         </button>
                                     </form>
+                                    <a href="{{ route('rebooking.formCreate', $booking) }}" class="btn btn-outline-darkgreen btn-sm mb-2">Reschedule</a>
                                 @endif
                                 @if ($booking->status == 'confirmed')
-                                    <form action="{{ route('booking.checkin', $booking->id) }}" method="post">
-                                        @method('PATCH')
-                                        @csrf
-                                        <button type="submit" class="btn btn-primary mb-2">
-                                            Check in Guest/s
-                                        </button>
-                                    </form>
+                                    @if ($booking->checkin_date == now())
+                                        <form action="{{ route('booking.checkin', $booking->id) }}" method="post">
+                                            @method('PATCH')
+                                            @csrf
+                                            <button type="submit" class="btn btn-primary mb-2">
+                                                Check in Guest/s
+                                            </button>
+                                        </form>
+                                    @endif
+                                    <a href="{{ route('rebooking.formCreate', $booking) }}" class="btn btn-outline-darkgreen btn-sm mb-2">Reschedule</a>
                                     <form action="{{ route('booking.noshow', $booking->id) }}" method="post">
                                         @method('PATCH')
                                         @csrf
@@ -184,6 +188,12 @@
                         @endif
                     </div>
                 </div>
+
+                @if (!is_null($booking->reason_of_cancel))
+                    <div class="mb-3">
+                        Reason of cancel: {{ $booking->reason_of_cancel }}
+                    </div>
+                @endif
 
                 <div class="row justify-content-between align-items-start g-4 mb-3">
                     <div class="col-md-7">

@@ -155,9 +155,9 @@
                 <div class="mb-3">
                     <h6>Advisory</h6>
                     <ul>
-                        <li>You are only given a limited time to complete the
+                        {{-- <li>You are only given a limited time to complete the
                             booking process.
-                        </li>
+                        </li> --}}
                         <li>You can prepare your GCash ahead for the down-payment.
                         </li>
                     </ul>

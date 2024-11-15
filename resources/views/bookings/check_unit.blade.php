@@ -1,7 +1,7 @@
 @extends(auth()->user()->usertype === 'manager' ? 'layouts.manager' : 'layouts.customer')
 @section('page', 'Unit Availability')
 @section('content')
-    <div class="container-fluid my-3">
+    <div class="container-fluid py-3">
         <div class="row justify-content-center align-items-center mb-3">
             <div class="col-lg-6">
                 <div class="card card-body rounded-4 border-0 shadow">
@@ -113,10 +113,10 @@
                                                             <div class="mb-3">
                                                                 <h6>Advisory</h6>
                                                                 <ul>
-                                                                    <li>You are only given a limited time to complete the
+                                                                    {{-- <li>You are only given a limited time to complete the
                                                                         booking
                                                                         process.
-                                                                    </li>
+                                                                    </li> --}}
                                                                     <li>You can prepare your GCash ahead for the down-payment.</li>
                                                                 </ul>
                                                             </div>

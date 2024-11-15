@@ -7,12 +7,16 @@ use App\Mail\SampleMail;
 use App\Models\Booking;
 use App\Models\User;
 use App\Notifications\BookingCreated;
+use Carbon\Carbon;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AccountController extends Controller
@@ -46,7 +50,40 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         Gate::authorize('is-manager');
-        //
+        
+        $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'verify_email' => 'boolean',
+            'phone_no' => 'required|numeric|digits:11|starts_with:09',
+            'usertype' => 'required|in:customer,manager',
+            'password' => ['required', Password::defaults()],
+            'active' => 'boolean',
+        ]);
+
+        $user_created = User::create([
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
+            'email' => $request->email,
+            'phone_no' => $request->phone_no,
+            'usertype' => $request->usertype,
+            'password' => Hash::make($request->password),
+            'email_verified_at' => $request->has('verify_email') ? Carbon::now() : null,
+            'is_archived' => $request->has('active') ? 1 : 0
+        ]);
+
+        if (!$request->has('verify_email')) {
+            event(new Registered($user_created));
+        }
+
+        if($user_created) {
+            Alert::success('Success', 'User account \'' . $user_created->first_name . ' ' . $user_created->last_name . '\' is created successfully.');
+            return redirect()->back();
+        } else {
+            Alert::error('Error', 'Something went wrong in creating the user.');
+            return back()->withInput();
+        }
     }
 
     /**
@@ -84,11 +121,10 @@ class AccountController extends Controller
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', Rule::unique(User::class)->ignore($account->id)],
             'phone_no' => ['required', 'regex:/^09\d{9}$/'],
-            'usertype' => ['required', Rule::in(['customer', 'manager'])]
         ]);
 
         // Fill the account model with only validated fields
-        $account->fill($request->only(['first_name', 'last_name', 'email', 'phone_no', 'usertype']));
+        $account->fill($request->only(['first_name', 'last_name', 'email', 'phone_no']));
 
         // Check if the model is dirty before saving to avoid unnecessary update
         if ($account->isDirty()) {
@@ -138,12 +174,12 @@ class AccountController extends Controller
     {
         Gate::authorize('is-manager');
         
-        $account->is_archived = true;
+        $account->is_archived = false;
         if ($account->save()) {
-            Alert::success('Success', 'The account is deactivated.');
+            Alert::success('Success', 'The account is activated.');
             return redirect()->back();
         } else {
-            Alert::error('Error', 'Something went wrong in deactivating account');
+            Alert::error('Error', 'Something went wrong in activating account');
             return redirect()->back();
         }
     }

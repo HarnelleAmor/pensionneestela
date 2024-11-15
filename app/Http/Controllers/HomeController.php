@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Photo;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 
@@ -10,7 +11,8 @@ class HomeController extends Controller
     public function homepage()
     {
         $units = Unit::with(['amenities', 'photos'])->get();
-        return view('home.homepage', compact('units'));
+        $photos = Photo::inRandomOrder()->take(10)->get();
+        return view('home.homepage', compact('units', 'photos'));
     }
 
     public function units()

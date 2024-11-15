@@ -74,7 +74,7 @@
                                 <div class="badge text-bg-danger fs-6 align-self-center">Not Available</div>
                             @endif
                         </div>
-                        <button class="btn btn-outline-darkgreen w-100 rounded-3 shadow-sm fw-medium mb-1" data-bs-toggle="modal" data-bs-target="#unitModal{{ $unit->id }}">View details</button>
+                        <button class="btn btn-outline-darkgreen btn-sm w-100 rounded-3 shadow-sm fw-medium mb-1" data-bs-toggle="modal" data-bs-target="#unitModal{{ $unit->id }}">View details</button>
                         <x-unit-modal :unit="$unit"/>
                         @if ($unit->is_available)
                                     <button type="button" class="btn btn-blackbean w-100 rounded-3 shadow-sm fw-medium"
@@ -105,9 +105,9 @@
                                                     <div class="mb-3">
                                                         <h6>Advisory</h6>
                                                         <ul>
-                                                            <li>You are only given a limited time to complete the
+                                                            {{-- <li>You are only given a limited time to complete the
                                                                 booking process.
-                                                            </li>
+                                                            </li> --}}
                                                             <li>You can prepare your GCash ahead for the down-payment.
                                                             </li>
                                                         </ul>

@@ -1,5 +1,7 @@
 @extends(auth()->user()->usertype === 'manager' ? 'layouts.manager' : 'layouts.customer')
-
+@if (auth()->user()->usertype == 'manager')
+    @section('page', 'Booking Form')
+@endif
 @section('content')
     @if (session('success'))
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -75,8 +77,7 @@
                     <div class="card-body px-5">
 
                         <div class="card-title fs-2 fw-medium text-center">Booking Form</div>
-                        <div class="card-subtitle text-body-secondary text-center mb-4">Nice! Fill up this form to continue
-                            booking the unit.</div>
+                        <div class="card-subtitle text-body-secondary text-center mb-4">Please fill up this form to book the unit.</div>
 
                         <form id="bookingForm" action="{{ route('booking.formStore') }}" method="post">
                             @csrf
@@ -107,7 +108,7 @@
                                     <label for="phone_no" class="form-label mb-0">Phone Number</label>
                                     <input id="phone_no"
                                         class="form-control border-bottom-only @error('phone_no') is-invalid @enderror"
-                                        type="text" pattern="\d*" name="phone_no" placeholder="09•••••••••"
+                                        type="number" name="phone_no" placeholder="09•••••••••"
                                         value="{{ old('phone_no', $user->usertype === 'customer' ? $user->phone_no : $booking->phone_no) }}"
                                         required />
                                     @error('phone_no')
@@ -191,12 +192,12 @@
                                                         data-service-name="{{ $service['name'] }}"
                                                         @checked(old('service' . $service['id'], $service['is_checked'])) />
                                                     <label class="form-check-label fw-medium"
-                                                        for="service_{{ $service['id'] }}">
-                                                        {{ $service['name'] }}
+                                                        for="service_{{ $service['id'] }}" data-bs-toggle="tooltip" data-bs-title="Each unit already includes 3 bed foams, one of which is foldable.">
+                                                            {{ $service['name'] }}
                                                     </label>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div class="input-group d-flex flex-nowrap" data-bs-toggle="tooltip" data-bs-title="Each unit already includes 3 bed foams, one of which is foldable.">
+                                                    <div class="input-group d-flex flex-nowrap" >
                                                         <span class="input-group-text">Quantity:</span>
                                                         <input type="number" id="quantity_{{ $service['id'] }}"
                                                             name="quantity{{ $service['id'] }}" type="text"
@@ -207,25 +208,6 @@
                                                             min="1"
                                                             max="2"
                                                             @disabled(!old('service' . $service['id'], $service['is_checked'])) />
-                                                        {{-- <button id="quanbuttonmin_{{ $service['id'] }}"
-                                                            class="btn btn-outline-secondary" type="button"
-                                                            @disabled(!old('service' . $service['id'], $service['is_checked']))
-                                                            onclick="stepper({{ $service['id'] }}, 'minus')">-</button>
-                                                        <input type="number" id="quantity_{{ $service['id'] }}"
-                                                            name="quantity{{ $service['id'] }}" type="text"
-                                                            class="form-control service-quantity text-center border border-dark-subtle border-top border-bottom"
-                                                            style="min-width: 50px; max-width: 55px"
-                                                            value="{{ old('quantity' . $service['id'], $service['quantity']) }}"
-                                                            aria-describedby="quantitylabel{{ $service['id'] }}"
-                                                            min="1"
-                                                            @if ($service['name'] === 'Extra Bed Foam') max="2"
-                                                            @else
-                                                                max="6" @endif
-                                                            @disabled(!old('service' . $service['id'], $service['is_checked'])) />
-                                                        <button id="quanbuttonmax_{{ $service['id'] }}"
-                                                            class="btn btn-outline-secondary" type="button"
-                                                            @disabled(!old('service' . $service['id'], $service['is_checked']))
-                                                            onclick="stepper({{ $service['id'] }}, 'plus')">+</button> --}}
                                                     </div>
                                                 </div>
                                                 @error('quantity.' . $service['id'])
@@ -247,13 +229,13 @@
                                                         onchange="toggleFields({{ $service['id'] }}, '{{ $service['name'] }}')"
                                                         data-service-name="{{ $service['name'] }}"
                                                         @checked(old('service' . $service['id'], $service['is_checked'])) />
-                                                    <label class="form-check-label fw-medium"
+                                                    <label class="form-check-label fw-medium" data-bs-toggle="tooltip" data-bs-title="Each unit already has 6 {{ strtolower($service['name']) }}."
                                                         for="service_{{ $service['id'] }}">
                                                         {{ $service['name'] }}
                                                     </label>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div class="input-group d-flex flex-nowrap" data-bs-toggle="tooltip" data-bs-title="Each unit already has 6 {{ strtolower($service['name']) }}.">
+                                                    <div class="input-group d-flex flex-nowrap">
                                                         <span class="input-group-text">Quantity:</span>
                                                         <input type="number" id="quantity_{{ $service['id'] }}"
                                                             name="quantity{{ $service['id'] }}" type="text"

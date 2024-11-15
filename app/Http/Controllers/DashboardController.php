@@ -9,6 +9,7 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -97,9 +98,10 @@ class DashboardController extends Controller
         }
         $total_bookings = Booking::whereMonth('checkout_date', Carbon::now()->month)->count();
         $total_customers = User::where('usertype', 'customer')->count();
-        $total_revenue = Booking::whereMonth('checkout_date', Carbon::now()->month)
-            ->where('status', 'checked-out')
-            ->sum('total_payment');
+        // $total_revenue = Booking::whereMonth('checkout_date', Carbon::now()->month)
+        //     ->where('status', 'checked-out')
+        //     ->sum('total_payment');
+        $total_revenue = Booking::sum('total_payment');
 
         $checkedout_bookings = Booking::where('is_archived', false)
             ->where('status', 'checked-out')
@@ -125,11 +127,28 @@ class DashboardController extends Controller
             'total' => Booking::where('is_archived', false)->count(),
         ];
 
+        $bookingTrends = DB::table('bookings')
+            ->selectRaw("DATE_FORMAT(created_at, '%Y-%m') as month, COUNT(*) as bookings")
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+        
+        $bookingTrendsLabels = $bookingTrends->pluck('month')
+            ->map(function ($month) {
+                return Carbon::createFromFormat('Y-m', $month)->format('M');
+            })->toArray();
+        $bookingTrendsData = $bookingTrends->pluck('bookings')->toArray();
+
+        $line_bookingTrends = [
+            'labels' => $bookingTrendsLabels,
+            'data' => $bookingTrendsData
+        ];
+
         $user = User::find(Auth::id());
         $notifications = $user->notifications()->take(20)->get();
         $unread_notifications = $user->unreadNotifications()->take(20)->get();
         // dd($notifications->first());
 
-        return view('managerdashboard.m-dashboard', compact('units', 'upcoming_bookings', 'upcoming_services', 'pending_bookings', 'checkin_bookings', 'checkout_bookings', 'total_bookings', 'total_customers', 'for_approvals', 'total_revenue', 'donut_bookings', 'notifications', 'unread_notifications'));
+        return view('managerdashboard.m-dashboard', compact('units', 'upcoming_bookings', 'upcoming_services', 'pending_bookings', 'checkin_bookings', 'checkout_bookings', 'total_bookings', 'total_customers', 'for_approvals', 'total_revenue', 'donut_bookings', 'notifications', 'unread_notifications', 'line_bookingTrends'));
     }
 }

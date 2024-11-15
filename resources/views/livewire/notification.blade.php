@@ -42,7 +42,7 @@
                 window.addEventListener('markAllSuccess', function(e) {
                     Swal.fire({
                         icon: 'success',
-                        title: e.title,
+                        title: 'Marked all notifications!',
                         showConfirmButton: false,
                         timer: 2000,
                         timerProgressBar: true,
@@ -53,7 +53,7 @@
                 window.addEventListener('markError', function(e) {
                     Swal.fire({
                         icon: 'error',
-                        title: e.title,
+                        title: 'Error in marking all notifications!',
                         showConfirmButton: false,
                         timer: 2000,
                         timerProgressBar: true,

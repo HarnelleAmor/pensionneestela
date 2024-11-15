@@ -14,7 +14,7 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="image" class="form-label mb-0">Upload Image</label>
-                                <input type="file" name="photos_path" class="form-control" id="image" required>
+                                <input type="file" name="photos_path" class="form-control" id="image" value="{{ old('photos_path') }}" required>
                                 @error('photos_path') 
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
@@ -25,7 +25,7 @@
                                 <select name="unit_id" class="form-select" id="unit_id" required>
                                     <option selected disabled>-- Select Unit --</option>
                                     @foreach($units as $unit)
-                                        <option value="{{ $unit->id }}">{{ $unit->name }}</option>
+                                        <option value="{{ $unit->id }}" @selected( $unit->id == old('unit_id'))>{{ $unit->name }}</option>
                                     @endforeach
                                 </select>
                                 @error('unit_id') 
@@ -34,7 +34,7 @@
                             </div>
                             <div class="mb-4">
                                 <label for="description" class="form-label mb-0">Description</label>
-                                <textarea name="descr" class="form-control" id="description" rows="1" required></textarea>
+                                <textarea name="descr" class="form-control" id="description" rows="1" required>{{ old('descr') }}</textarea>
                                 @error('descr') 
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror

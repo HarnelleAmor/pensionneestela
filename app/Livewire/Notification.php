@@ -46,7 +46,7 @@ class Notification extends Component
         $notif = $this->user->unreadNotifications->where('id', $id)->first();
         if ($notif) {
             try {
-                // $notif->markAsRead();
+                $notif->markAsRead();
                 $this->dispatch('markSuccess', id: $id, title: 'Notification marked as read!');
             } catch (\Exception $e) {
                 $this->dispatch('markError', id: $id, title: 'Error in marking notification!');
@@ -61,9 +61,9 @@ class Notification extends Component
         try {
             $this->user->unreadNotifications->markAsRead();
             $this->refreshNotifs();
-            $this->dispatch('markAllSuccess', title: 'Marked all notifications!');
+            $this->dispatch('markAllSuccess');
         } catch (\Exception $e) {
-            $this->dispatch('markAllError', title: 'Error in marking all notifications!');
+            $this->dispatch('markAllError');
         }
     }
 

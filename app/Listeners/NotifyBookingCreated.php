@@ -6,10 +6,11 @@ use App\Events\BookingCreated;
 use App\Models\User;
 use App\Notifications\BookingCreatedNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Support\Facades\Notification;
 
-class NotifyBookingCreated implements ShouldQueue
+class NotifyBookingCreated implements ShouldQueueAfterCommit
 {
 
     /**

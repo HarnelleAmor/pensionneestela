@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rules;
 use Illuminate\View\View;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class NewPasswordController extends Controller
 {
@@ -57,5 +58,15 @@ class NewPasswordController extends Controller
                     ? redirect()->route('login')->with('status', __($status))
                     : back()->withInput($request->only('email'))
                             ->withErrors(['email' => __($status)]);
+
+        // if ($status == Password::PASSWORD_RESET) {
+        //     Alert::success('Password Reset', $status);
+        //     return redirect()->route('login');
+        // } else {
+        //     return back()
+        //         ->withInput($request->only('email'))
+        //         ->withErrors(['email' => __($status)]);
+        // }
+                            
     }
 }

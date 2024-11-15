@@ -1,6 +1,6 @@
-<x-mail::message>
-    {{-- Header with Logo and Contact Information --}}
-    {{-- <table style="width: 100%;">
+{{-- <x-mail::message>
+    Header with Logo and Contact Information
+    <table style="width: 100%;">
         <tr>
             <td style="text-align: left; vertical-align: top;">
                 
@@ -24,7 +24,7 @@
             </td>
         </tr>
     </table>
-    <hr style="margin-bottom: 15px;"> --}}
+    <hr style="margin-bottom: 15px;">
 
     # Hello {{ $booking->first_name }},
 
@@ -71,4 +71,111 @@
         If you have any issues viewing your booking, you may go directly on our website thru:
         [{{ url('/') }}]({{ url('/') }})
     </x-slot:subcopy>
-</x-mail::message>
+</x-mail::message> --}}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>{{ config('app.name') }}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    {{-- <style>
+        @media only screen and (max-width: 600px) {
+            .inner-body {
+                width: 100% !important;
+            }
+
+            .footer {
+                width: 100% !important;
+            }
+        }
+
+        @media only screen and (max-width: 500px) {
+            .button {
+                width: 100% !important;
+            }
+        }
+    </style> --}}
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body style="font-family: 'Figtree';">
+    {{-- <table class="wrapper" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+        <tr>
+            <td align="center">
+                <table class="content" width="100%" cellpadding="0" cellspacing="0" role="presentation">
+                    {{ $header ?? '' }}
+
+                    <!-- Email Body -->
+                    <tr>
+                        <td class="body" width="100%" cellpadding="0" cellspacing="0"
+                            style="border: hidden !important;">
+                            <table class="inner-body" align="center" width="570" cellpadding="0" cellspacing="0"
+                                role="presentation">
+                                <!-- Body content -->
+                                <tr>
+                                    <td class="content-cell">
+                                        {{ Illuminate\Mail\Markdown::parse($slot) }}
+
+                                        {{ $subcopy ?? '' }}
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+
+                    {{ $footer ?? '' }}
+                </table>
+            </td>
+        </tr>
+    </table> --}}
+    <div class="container">
+        <div class="row justify-content-center align-items-center g-2">
+            <div class="col">
+                <div
+                    class="table-responsive"
+                >
+                    <table
+                        class="table table-light"
+                    >
+                        <thead>
+                            <tr>
+                                <th scope="col">Column 1</th>
+                                <th scope="col">Column 2</th>
+                                <th scope="col">Column 3</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="">
+                                <td scope="row">R1C1</td>
+                                <td>R1C2</td>
+                                <td>R1C3</td>
+                            </tr>
+                            <tr class="">
+                                <td scope="row">Item</td>
+                                <td>Item</td>
+                                <td>Item</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+            </div>
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous">
+    </script>
+</body>
+
+</html>

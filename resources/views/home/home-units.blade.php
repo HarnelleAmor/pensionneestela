@@ -2,8 +2,8 @@
 
 @section('content')
     <!-- Unit Details Section -->
-    <div class="unit-details-section py-5">
-        <div class="container mt-5 pt-5">
+    <div class="unit-details-section mb-3" style="margin-top: 100px;">
+        <div class="container">
             <!-- Title and Intro -->
             <div class="row mb-4">
                 <div class="col-md-12">
@@ -253,21 +253,28 @@
                                                         confirmButtonText: 'Login'
                                                     }).then((result) => {
                                                         if (result.isConfirmed) {
-                                                            window.location.href = '{{route('login')}}';
+                                                            $('#goBooking').submit();
                                                         }
                                                     });
                                                 }
                                             }"
                                         >
+                                        <form id="goBooking" action="{{ route('unit.selected') }}" method="post" style="display: none;">
+                                            @csrf
+                                            <input type="hidden" name="unit_id" value="{{ $unit->id }}"/>
+                                            <input type="hidden" name="checkin" value="{{ $unit->checkin_date }}"/>
+                                            <input type="hidden" name="checkout" value="{{ $unit->checkout_date }}"/>
+                                        </form>
                                             @isset($show_in, $show_out)
-                                                <button type="button" class="btn btn-blackbean px-4" x-on:click="loginAlert">Book</button>
+                                                @if ($unit->is_available)
+                                                    <button type="button" class="btn btn-blackbean px-4" x-on:click="loginAlert">Book this Unit</button>
+                                                @endif
                                             @else
                                                 {{-- Cases: not auth user, auth user --}}
                                                 @auth
-                                                    <a href="{{ route('showUnitCheckPage') }}" class="btn btn-blackbean px-4">Check
-                                                        Availability</a>
+                                                    <a href="{{ route('showUnitCheckPage') }}" class="btn btn-blackbean px-4">Check Availability</a>
                                                 @else
-                                                    <button type="button" class="btn btn-blackbean px-4" x-on:click="loginAlert">Book</button>
+                                                    <button type="button" class="btn btn-blackbean px-4" x-on:click="loginAlert">Book this Unit</button>
                                                 @endauth
                                             @endisset
                                         </div>

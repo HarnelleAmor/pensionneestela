@@ -71,7 +71,7 @@
                     <h3 class="mb-0 fw-semibold">Unread Notifications</h3>
 
 
-                    <div class="dropdown">
+                    {{-- <div class="dropdown">
                         <button type="button" class="btn btn-light border-0 p-2 rounded-circle d-inline-flex"
                             data-bs-toggle="dropdown" aria-expanded="false">
                             <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" fill="currentColor"
@@ -81,12 +81,12 @@
                             </svg>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 rounded-3">
-                            {{-- <li><a class="dropdown-item icon-link" href="#"><svg
+                            <li><a class="dropdown-item icon-link" href="#"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         fill="currentColor" class="bi bi-check2" viewBox="0 0 16 16">
                                         <path
                                             d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
-                                    </svg>Mark all as read</a></li> --}}
+                                    </svg>Mark all as read</a></li>
                             <li><a class="dropdown-item icon-link" href="{{ route('notifs.index') }}"><svg
                                         xmlns="http://www.w3.org/2000/svg" width="16" height="16"
                                         fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
@@ -94,7 +94,7 @@
                                             d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2M8 1.918l-.797.161A4 4 0 0 0 4 6c0 .628-.134 2.197-.459 3.742-.16.767-.376 1.566-.663 2.258h10.244c-.287-.692-.502-1.49-.663-2.258C12.134 8.197 12 6.628 12 6a4 4 0 0 0-3.203-3.92zM14.22 12c.223.447.481.801.78 1H1c.299-.199.557-.553.78-1C2.68 10.2 3 6.88 3 6c0-2.42 1.72-4.44 4.005-4.901a1 1 0 1 1 1.99 0A5 5 0 0 1 13 6c0 .88.32 4.2 1.22 6" />
                                     </svg>Open Notifications</a></li>
                         </ul>
-                    </div>
+                    </div> --}}
                 </div>
                 <div class="overflow-y-auto" style="height: 24rem;">
                     <livewire:notification />
@@ -190,7 +190,7 @@
                             Dashboard
                         </a>
                     </li>
-                    <li class="nav-item mb-2">
+                    {{-- <li class="nav-item mb-2">
                         <a class="btn btn-sage rounded-3 ps-4 gap-3 w-100 icon-link fs-6 fw-semibold shadow"
                             href="{{ route('notifs.index') }}" data-leave-check="true">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bell" viewBox="0 0 16 16">
@@ -198,7 +198,7 @@
                               </svg>
                             Notifications
                         </a>
-                    </li>
+                    </li> --}}
                     <li class="nav-item mb-2">
                         <a class="btn btn-sage rounded-3 ps-4 gap-3 w-100 icon-link fs-6 fw-semibold shadow"
                             href="{{ route('bookings.index') }}" data-leave-check="true">
@@ -241,6 +241,26 @@
                                     d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z" />
                             </svg>
                             Photos
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="btn btn-sage rounded-3 ps-4 gap-3 w-100 icon-link fs-6 fw-semibold shadow"
+                            href="{{ route('backuprestore.index') }}" data-leave-check="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-database-gear" viewBox="0 0 16 16">
+                                <path d="M12.096 6.223A5 5 0 0 0 13 5.698V7c0 .289-.213.654-.753 1.007a4.5 4.5 0 0 1 1.753.25V4c0-1.007-.875-1.755-1.904-2.223C11.022 1.289 9.573 1 8 1s-3.022.289-4.096.777C2.875 2.245 2 2.993 2 4v9c0 1.007.875 1.755 1.904 2.223C4.978 15.71 6.427 16 8 16c.536 0 1.058-.034 1.555-.097a4.5 4.5 0 0 1-.813-.927Q8.378 15 8 15c-1.464 0-2.766-.27-3.682-.687C3.356 13.875 3 13.373 3 13v-1.302c.271.202.58.378.904.525C4.978 12.71 6.427 13 8 13h.027a4.6 4.6 0 0 1 0-1H8c-1.464 0-2.766-.27-3.682-.687C3.356 10.875 3 10.373 3 10V8.698c.271.202.58.378.904.525C4.978 9.71 6.427 10 8 10q.393 0 .774-.024a4.5 4.5 0 0 1 1.102-1.132C9.298 8.944 8.666 9 8 9c-1.464 0-2.766-.27-3.682-.687C3.356 7.875 3 7.373 3 7V5.698c.271.202.58.378.904.525C4.978 6.711 6.427 7 8 7s3.022-.289 4.096-.777M3 4c0-.374.356-.875 1.318-1.313C5.234 2.271 6.536 2 8 2s2.766.27 3.682.687C12.644 3.125 13 3.627 13 4c0 .374-.356.875-1.318 1.313C10.766 5.729 9.464 6 8 6s-2.766-.27-3.682-.687C3.356 4.875 3 4.373 3 4"/>
+                                <path d="M11.886 9.46c.18-.613 1.048-.613 1.229 0l.043.148a.64.64 0 0 0 .921.382l.136-.074c.561-.306 1.175.308.87.869l-.075.136a.64.64 0 0 0 .382.92l.149.045c.612.18.612 1.048 0 1.229l-.15.043a.64.64 0 0 0-.38.921l.074.136c.305.561-.309 1.175-.87.87l-.136-.075a.64.64 0 0 0-.92.382l-.045.149c-.18.612-1.048.612-1.229 0l-.043-.15a.64.64 0 0 0-.921-.38l-.136.074c-.561.305-1.175-.309-.87-.87l.075-.136a.64.64 0 0 0-.382-.92l-.148-.045c-.613-.18-.613-1.048 0-1.229l.148-.043a.64.64 0 0 0 .382-.921l-.074-.136c-.306-.561.308-1.175.869-.87l.136.075a.64.64 0 0 0 .92-.382zM14 12.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
+                            </svg>
+                            Backup & Restore
+                        </a>
+                    </li>
+                    <li class="nav-item mb-2">
+                        <a class="btn btn-sage rounded-3 ps-4 gap-3 w-100 icon-link fs-6 fw-semibold shadow"
+                            href="{{ route('audits.index') }}" data-leave-check="true">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-card-list" viewBox="0 0 16 16">
+                                <path d="M14.5 3a.5.5 0 0 1 .5.5v9a.5.5 0 0 1-.5.5h-13a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5zm-13-1A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2z"/>
+                                <path d="M5 8a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7A.5.5 0 0 1 5 8m0-2.5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m0 5a.5.5 0 0 1 .5-.5h7a.5.5 0 0 1 0 1h-7a.5.5 0 0 1-.5-.5m-1-5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0M4 8a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0m0 2.5a.5.5 0 1 1-1 0 .5.5 0 0 1 1 0"/>
+                            </svg>
+                            Audit Logs
                         </a>
                     </li>
                 </ul>

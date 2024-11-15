@@ -8,10 +8,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
+use OwenIt\Auditing\Auditable as AuditingAuditable;
+use OwenIt\Auditing\Contracts\Auditable;
 
-class Booking extends Model
+class Booking extends Model implements Auditable
 {
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, AuditingAuditable;
 
     /**
      * The channels the user receives notification broadcasts on.

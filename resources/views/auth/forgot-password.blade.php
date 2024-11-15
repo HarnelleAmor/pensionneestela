@@ -26,13 +26,18 @@
                                 {{ __('Email Password Reset Link') }}
                             </button>
                         </div>
+
+                        @if (session('status'))
+                            <div class="d-flex mt-3">
+                                <div class="alert alert-info" role="alert">
+                                    {{ session('status') }}
+                                </div>
+                            </div>
+                        @endif
                     </form>
                 </div>
             </div>
 
         </div>
-
-        <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
     @endsection
 </x-guest-layout>

@@ -104,16 +104,6 @@
                                 <div class="row justify-content-center g-2">
                                     <div class="col-md-5 order-2 order-sm-1">
                                         <h3>{{ $unit->name }}</h3>
-                                        @isset($unit->is_available)
-                                            @if ($unit->is_available)
-                                                <p class="status text-success"><i class="bi bi-calendar2-check-fill"></i>
-                                                    Available </p>
-                                            @else
-                                                <p class="status text-danger"><i class="bi bi-calendar2-x-fill"></i> Not
-                                                    Available
-                                                </p>
-                                            @endif
-                                        @endisset
                                         <p class="mb-0"><i class="bi bi-people-fill"></i> {{ $unit->occupancy_limit }} Guest Capacity</p>
                                         <p class="mb-0"><x-bedroom-icon /> {{ $unit->bed_config }}</p>
                                     </div>
@@ -181,7 +171,7 @@
                                             <h3 class="unit-title">{{ $unit->name }}</h3>
                                             <h6 class="card-subtitle text-body-secondary">{{ $unit->view }}</h6>
                                         </div>
-                                        @isset($unit->is_available)
+                                        {{-- @isset($unit->is_available)
                                             <div class="col align-self-center text-end">
                                                 @if ($unit->is_available)
                                                     <p class="status text-success fs-5"><i
@@ -194,7 +184,7 @@
                                                     </p>
                                                 @endif
                                             </div>
-                                        @endisset
+                                        @endisset --}}
                                     </div>
                                     <div class="row g-2 my-3">
                                         <div class="col-5 fw-medium ps-2">
@@ -314,32 +304,22 @@
                                             </p>
                                             <p class="fs-6 text-body-secondary mb-0">Per night excluding service charges</p>
                                         </div>
-                                        <div class="col align-self-end text-end" 
-                                            x-data="{
-                                                loginAlert() {
-                                                    Swal.fire({
-                                                        icon: 'info',
-                                                        text: 'Please log-in to book this unit.',
-                                                        confirmButtonText: 'Login'
-                                                    }).then((result) => {
-                                                        if (result.isConfirmed) {
-                                                            window.location.href = '{{route('login')}}';
-                                                        }
-                                                    });
-                                                }
-                                            }"
-                                        >
-                                            @isset($show_in, $show_out)
-                                                <button type="button" class="btn btn-blackbean px-4" x-on:click="loginAlert">Book</button>
+                                        <div class="col align-self-end text-end">
+                                            {{-- Cases: not auth user, auth user --}}
+                                            @auth
+                                                <a href="{{ route('showUnitCheckPage') }}" class="btn btn-blackbean px-4">Check
+                                                    Availability</a>
                                             @else
-                                                {{-- Cases: not auth user, auth user --}}
-                                                @auth
-                                                    <a href="{{ route('showUnitCheckPage') }}" class="btn btn-blackbean px-4">Check
-                                                        Availability</a>
-                                                @else
-                                                    <button type="button" class="btn btn-blackbean px-4" x-on:click="loginAlert">Book</button>
-                                                @endauth
-                                            @endisset
+                                                <button type="button" class="btn btn-blackbean px-4" data-bs-dismiss="modal"
+                                                aria-label="Close"
+                                                x-data
+                                                x-on:click="
+                                                    setTimeout(() => {
+                                                        window.location.href = '#home'
+                                                    }, 300);
+                                                "
+                                                >Check Availability</button>
+                                            @endauth
                                         </div>
                                     </div>
                                 </div>
@@ -350,60 +330,24 @@
             </div>
     </div>
 
-    {{-- <div id="gallery" class="container my-5">
+    <div id="gallery" class="container position-relative my-5">
         <div class="row justify-content-center">
             <!-- Main Content Area for Gallery -->
             <main class="col-md-10">
                 <h2 class="text-center text-uppercase mb-5">Gallery</h2>
     
                 <!-- Gallery Section -->
-                <div class="row">
-                    <!-- Gallery Item 1 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="gallery-item shadow-sm rounded overflow-hidden">
-                            <img src="{{ asset('assets/images/banner1.jpg') }}" class="img-fluid" alt="GAL1">
-                            <div class="p-3 bg-light">
-                                <p class="text-muted text-center">Description msklfmkslmfklnflknsd</p>
-                            </div>
+                <div class="d-flex gap-3 overflow-auto" style="white-space: nowrap;">
+                    @foreach ($photos as $photo)
+                        <div class="rounded-3 flex-shrink-0" style="height: 50vh; width: 70vh;">
+                            <img src="{{ asset($photo->photos_path) }}" alt="{{ $photo->descr }}" class="img-fluid object-fit-cover h-100 w-100">
                         </div>
-                    </div>
-    
-                    <!-- Gallery Item 2 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="gallery-item shadow-sm rounded overflow-hidden">
-                            <img src="{{ asset('assets/images/banner2.jpg') }}" class="img-fluid" alt="GAL2">
-                            <div class="p-3 bg-light">
-                                <p class="text-muted text-center">Description msklfmkslmfklnflknsd</p>
-                            </div>
-                        </div>
-                    </div>
-    
-                    <!-- Gallery Item 3 -->
-                    <div class="col-md-4 mb-4">
-                        <div class="gallery-item shadow-sm rounded overflow-hidden">
-                            <img src="{{ asset('assets/images/banner3.jpg') }}" class="img-fluid" alt="GAL3">
-                            <div class="p-3 bg-light">
-                                <p class="text-muted text-center">Description msklfmkslmfklnflknsd</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                </div>
-    
-                <!-- Pagination -->
-                <div class="d-flex justify-content-center mt-4">
-                    <nav>
-                        <ul class="pagination">
-                            <li class="page-item"><a class="page-link" href="#">Previous</a></li>
-                            <li class="page-item"><a class="page-link" href="#">1</a></li>
-                            <li class="page-item"><a class="page-link" href="#">2</a></li>
-                            <li class="page-item"><a class="page-link" href="#">Next</a></li>
-                        </ul>
-                    </nav>
+                    @endforeach
                 </div>
             </main>
         </div>
-    </div> --}}
+    </div>
+    
 
     <div id="aboutus" class="container my-5">
         <!-- About Us Section -->

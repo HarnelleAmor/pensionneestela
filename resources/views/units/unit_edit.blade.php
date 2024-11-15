@@ -138,7 +138,7 @@
                         <!-- Modal for Full View (single modal for all photos) -->
                         <div class="modal fade" id="photoModal" tabindex="-1" aria-labelledby="photoModalLabel"
                             aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered">
+                            <div class="modal-dialog modal-lg modal-dialog-centered">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <h5 class="modal-title" id="photoModalLabel">Photo Preview</h5>
@@ -194,7 +194,7 @@
                             <div class="col-md-3">
                                 <label for="name" class="form-label mb-0">Unit Name</label>
                                 <input type="text" class="form-control" id="name"
-                                    value="{{ $unit->price_per_night }}" readonly />
+                                    value="{{ $unit->name }}" readonly />
                             </div>
                             <div class="col-md-3">
                                 <label for="capacity" class="form-label mb-0">Guest Capacity</label>

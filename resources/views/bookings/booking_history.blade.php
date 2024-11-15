@@ -3,7 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col-md-12 mb-4">
-            <h3 class="text-center fw-semibold text-uppercase">Booking History</h3>
+            <h3 class="text-center fw-semibold text-uppercase">Your Booking Records</h3>
             <div class="table-responsive mt-4">
                 @push('scripts')
                     <script type="module">

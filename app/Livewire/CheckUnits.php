@@ -29,7 +29,7 @@ class CheckUnits extends Component
 
     public function mount()
     {
-        $this->startDate = Carbon::today()->toDateString();
+        $this->startDate = Carbon::now()->toDateString();
         $this->endDate = Carbon::parse($this->startDate)->addDay()->toDateString();
 
         $this->units_with_status = Unit::with(['amenities', 'photos'])->get();
@@ -87,8 +87,10 @@ class CheckUnits extends Component
                             ->where('check_out', '>=', $checkout_date);
                     });
             })
+            // ->dd();
             ->doesntExist();
         
+        // dump($is_available, $free_on_queue);
         return $is_available && $free_on_queue;
     }
 

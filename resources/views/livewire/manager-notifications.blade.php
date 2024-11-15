@@ -1,4 +1,4 @@
-<div class="card rounded-3" style="height: 50rem;">
+<div class="card rounded-3">
     <div class="card-body">
         <div class="overflow-auto">
             @foreach ($notifications as $notification)

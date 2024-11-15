@@ -13,7 +13,7 @@ use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Auth;
 
-class BookingCreated implements ShouldDispatchAfterCommit
+class BookingCreated
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 

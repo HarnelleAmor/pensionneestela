@@ -16,7 +16,7 @@
                             @method('PATCH')
 
                             <div class="row justify-content-center align-items-center g-2 mb-3">
-                                <div class="col-lg-6 col-md-6">
+                                <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="first_name" class="form-label mb-0">First Name</label>
                                         <input type="text" class="form-control" name="first_name" id="first_name"
@@ -27,7 +27,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-lg-6 col-md-6">
+                                <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="last_name" class="form-label mb-0">Last Name</label>
                                         <input type="text" class="form-control" name="last_name" id="last_name"
@@ -38,7 +38,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6">
+                                <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="email" class="form-label mb-0">Email</label>
                                         <input type="email" class="form-control" name="email" id="email"
@@ -49,7 +49,7 @@
                                         @enderror
                                     </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6">
+                                <div class="col-md-6">
                                     <div class="mb-3">
                                         <label for="phone_no" class="form-label mb-0">Phone Number</label>
                                         <input type="text" class="form-control" name="phone_no" id="phone_no"
@@ -59,16 +59,6 @@
                                             <small class="form-text text-danger">{{ $message }}</small>
                                         @enderror
                                     </div>
-                                </div>
-                                <div class="col-lg-4 col-md-6">
-                                    <div class="mb-3">
-                                        <label for="usertype" class="form-label mb-0">User Role</label>
-                                        <select class="form-select" name="usertype" id="usertype">
-                                            <option value="customer" @selected($account->usertype == 'customer')>Customer</option>
-                                            <option value="manager" @selected($account->usertype == 'manager')>Manager</option>
-                                        </select>
-                                    </div>
-
                                 </div>
                             </div>
 

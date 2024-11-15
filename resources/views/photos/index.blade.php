@@ -5,11 +5,18 @@
         <div class="row justify-content-center">
             <div class="col-12">
                 <div class="card">
-                    <div class="card-header bg-dark d-flex justify-content-between align-items-center">
+                    <div class="card-header bg-darkgreen d-flex justify-content-between align-items-cente">
                         <h4 class="mb-0 text-white">Gallery</h4>
-                        <a href="{{ route('photos.create') }}" class="btn btn-primary">Add Photo</a>
+                        <a href="{{ route('photos.create') }}" class="btn btn-sage">Add Photo</a>
                     </div>
                     <div class="card-body">
+                        {{-- Success Message --}}
+                        @if (session('success'))
+                            <div class="alert alert-success" role="alert">
+                                {{ session('success') }}
+                            </div>
+                        @endif
+                        
                         <div class="table-responsive">
                             @push('scripts')
                                 <script type="module">
@@ -17,7 +24,6 @@
                                         $('#photos').DataTable({
                                             scrollX: true,
                                             scrollY: "25rem",
-
                                         });
                                     });
                                 </script>

@@ -70,7 +70,7 @@ class BookingCreatedNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
-            ->subject('Booking Creation - ' . $this->booking->unit->name)
+            ->subject('Booking Created - ' . $this->booking->unit->name)
             // ->greeting('Hello ' . $this->booking->first_name . ',')
             // ->line('We are pleased to inform you that your booking has been successfully created!')
             // ->line('**Booking Details:**')
@@ -83,7 +83,7 @@ class BookingCreatedNotification extends Notification
             // ->action('View Your Booking', url('/bookings/' . $this->booking->id))
             // ->salutation('Warm regards,')
             // ->line(config('app.name'))
-            ->markdown('mail.booking.created', ['booking' => $this->booking]); // Pass booking data;
+            ->view('mail.booking.created', ['booking' => $this->booking]); // Pass booking data;
     }
 
 

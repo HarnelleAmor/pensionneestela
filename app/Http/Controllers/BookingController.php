@@ -43,6 +43,16 @@ class BookingController extends Controller
         }
     }
 
+    public function getAllBookings()
+    {
+        Gate::authorize('is-manager');
+        $bookings = Booking::with(['services', 'unit'])
+            ->where('is_archived', false)
+            ->latest('checkin_date')
+            ->get();
+        return response()->json($bookings);
+    }
+
     /**
      * Receive's the unit and dates chosen by the user, and then proceeds to booking form.
      */
@@ -64,6 +74,7 @@ class BookingController extends Controller
             'checkout' => 'required|date|after:checkin',
         ]);
 
+        $booking = null;
         if (empty($request->session()->get('booking'))) {
             $booking = new Booking();
             $booking->fill([
@@ -84,14 +95,33 @@ class BookingController extends Controller
             $request->session()->put('booking', $booking);
         }
 
-        // add the unit and dates to the booking queue table
-        BookingQueue::create([
-            'user_id' => Auth::id(),
-            'unit_id' => $request->unit_id,
-            'check_in' => $request->checkin,
-            'check_out' => $request->checkout
-        ]);
+        $checkin = $booking->checkin_date;
+        $checkout = $booking->checkout_date;
+        $last_queue_check = BookingQueue::where('unit_id', $booking->unit_id)
+        ->where(function ($query) use ($checkin, $checkout) {
+            $query->whereBetween('check_in', [$checkin, $checkout])
+                ->orWhereBetween('check_out', [$checkin, $checkout])
+                ->orWhere(function ($q) use ($checkin, $checkout) {
+                    $q->where('check_in', '<=', $checkin)
+                        ->where('check_out', '>=', $checkout);
+                });
+        })
+        ->whereNot('user_id', Auth::id())
+        ->exists();
 
+        if ($last_queue_check) {
+            Alert::error('Oops...', 'Look\'s like someone started booking the unit before you did. Try checking our other units. Thank you for your understanding :)');
+            return back();
+        } else {
+            // add the unit and dates to the booking queue table
+            BookingQueue::create([
+                'user_id' => Auth::id(),
+                'unit_id' => $request->unit_id,
+                'check_in' => $request->checkin,
+                'check_out' => $request->checkout
+            ]);
+        }
+        
         return redirect()->route('booking.formCreate');
     }
 
@@ -148,14 +178,21 @@ class BookingController extends Controller
         return view('bookings.booking_create', compact('booking', 'user', 'services', 'unit_selected', 'checkin', 'checkout', 'unit_photo', 'has_wifi', 'no_of_nights'));
     }
 
+    public function createRebookingForm(Booking $booking)
+    {
+        Gate::allows('view-booking', $booking);
+        $booking->load('unit');
+        return view('bookings.booking_rebook', compact('booking'));
+    }
+
     /**
      * Receive's the booking info, then proceeds to the payment
      */
     public function postBookingForm(Request $request)
     {
         $rules = [
-            'first_name' => 'required|regex:/^[a-zA-Z\s]+$/|max:255',
-            'last_name' => 'required|regex:/^[a-zA-Z\s]+$/|max:255',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
             'phone_no' => 'required|regex:/^09\d{9}$/',
             'email' => 'required|email',
             'no_of_guests' => 'required|integer|min:1',
@@ -232,6 +269,53 @@ class BookingController extends Controller
         return redirect()->route('booking.payCreate');
     }
 
+    public function postRebookingForm(Request $request, Booking $booking)
+    {
+        Gate::authorize('view-booking', $booking);
+        $request->validate([
+            'new_unit' => 'required|integer',
+            'new_checkin' => 'required|date|after_or_equal:today',
+            'new_checkout' => 'required|date|after:new_checkin',
+        ]);
+        
+        $booking->unit_id = $request->new_unit;
+        $booking->checkin_date = Carbon::parse($request->new_checkin);
+        $booking->checkout_date = Carbon::parse($request->new_checkout);
+
+        if($booking->isDirty())
+        {
+            $booking_queue = BookingQueue::create([
+                'user_id' => $request->user()->id,
+                'unit_id' => $request->new_unit,
+                'check_in' => Carbon::parse($request->new_checkin),
+                'check_out' => Carbon::parse($request->new_checkout),
+            ]);
+            if (Gate::allows('is-manager')) {
+                $booking->status = 'confirmed';
+            } else {
+                $booking->status = 'pending';
+            }
+            
+            if ($booking->save()) {
+                $booking_queue->delete();
+                if (Gate::allows('is-manager')) {
+                    Alert::success('Booking Rescheduled', 'A confirmation will be sent to the customer shortly.');
+                    return redirect()->route('bookings.index');
+                } else {
+                    Alert::success('Request Sent', 'We will send you a confirmation email when the request is confirmed.');
+                    return redirect()->route('customerdashboard');
+                }
+            } else {
+                $booking_queue->delete();
+                Alert::error('Error', 'Something went wrong in rescheduling the booking');
+                return back()->withInput();
+            }
+        } else {
+            Alert::info('No Action', 'There are no changes in the form submitted.');
+            return back();
+        }
+    }
+
     /**
      * Displays the gcash info page
      */
@@ -269,7 +353,7 @@ class BookingController extends Controller
         $outstanding_pay = $booking->total_payment - $downpayment;
 
         $booking->fill([
-            'status' =>  Gate::allows('is-manager') ? 'confirmed' : 'pending',
+            'status' =>  Auth::user()->usertype == 'manager' ? 'confirmed' : 'pending',
             'outstanding_payment' => $outstanding_pay,
             'gcash_ref_no' => $request->ref_no == 'cash' ? null : $request->ref_no
         ]);
@@ -306,18 +390,18 @@ class BookingController extends Controller
                 $request->session()->forget(['booking', 'selectedServices', 'booking_downpayment', 'sessionServices']);
 
                 BookingQueue::where('user_id', Auth::id())->delete();
-
-                if (Gate::allows('is-manager')) {
-                    Alert::success('Booking Created!', 'Booking #'.$newBooking->reference_no.' is created and confirmed.');
-                    return redirect()->route('managerdashboard');
-                } else {
-                    Alert::success('Booking Created!', 'You\'re booking is created successfully. Let\'s wait for the staff to confirm your booking.');
-                    return redirect()->route('customerdashboard');
-                }
             }, 2);
         } catch (\Exception $e) {
             Alert::error('Error!', 'Something went wrong in making the booking. ' . $e->getMessage());
             return back()->withInput();
+        }
+
+        if (Gate::allows('is-manager')) {
+            Alert::success('Booking Created!', 'Booking is created and confirmed.');
+            return redirect()->route('managerdashboard');
+        } else {
+            Alert::success('Booking Created!', 'You\'re booking is created successfully. Let\'s wait for the staff to confirm your booking.');
+            return redirect()->route('customerdashboard');
         }
     }
 

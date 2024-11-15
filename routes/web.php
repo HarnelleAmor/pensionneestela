@@ -4,6 +4,8 @@ use App\Events\BookingCreated;
 use App\Events\Example;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\AmenityController;
+use App\Http\Controllers\AuditController;
+use App\Http\Controllers\BackupRestoreController;
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\HomeController;
@@ -21,9 +23,10 @@ use App\Notifications\BookingCreatedNotification;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Route;
 
-// Search about different urls leading to the same controller
+
 Route::get('/', [HomeController::class, 'homepage'])->name('homepage');
 Route::get('/hompage/units', [HomeController::class, 'units'])->name('home-units');
 Route::get('/homepage/gallery', [HomeController::class, 'gallery'])->name('home-gallery');
@@ -46,10 +49,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::resource('bookings', BookingController::class)->except('create');
     Route::controller(BookingController::class)->group(function () {
+        Route::get('bookingsjson', 'getAllBookings')->name('getallbookings');
+
         Route::get('booking/form', 'createBookingForm')->name('booking.formCreate');
         Route::post('booking/form', 'postBookingForm')->name('booking.formStore');
         Route::get('booking/form/payment', 'getBookingPay')->name('booking.payCreate');
-
+        Route::get('rebooking/form/{booking}', 'createRebookingForm')->name('rebooking.formCreate');
+        Route::patch('rebooking/form/{booking}', 'postRebookingForm')->name('rebooking.formStore');
         $uris = [
             'unit/selected',
             'booking/cancel/{booking}',
@@ -90,14 +96,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
     // TODO: Gate if unauthorized user
 
     Route::resource('accounts', AccountController::class);
-    Route::match(['put', 'patch'], 'accounts/deactivate', [AccountController::class, 'deactivate'])->name('account.deactivate');
-    Route::match(['put', 'patch'], 'accounts/activate', [AccountController::class, 'activate'])->name('account.activate');
+    Route::match(['put', 'patch'], 'accounts/deactivate/{account}', [AccountController::class, 'deactivate'])->name('account.deactivate');
+    Route::match(['put', 'patch'], 'accounts/activate/{account}', [AccountController::class, 'activate'])->name('account.activate');
 
     Route::resource('units', UnitController::class);
 
     Route::resource('amenities', AmenityController::class);
 
     Route::resource('photos', PhotoController::class);
+
+    Route::resource('audits', AuditController::class)->only(['index']);
+
+    Route::get('backuprestore', [BackupRestoreController::class, 'index'])->name('backuprestore.index');
+    Route::post('backuprestore', [BackupRestoreController::class, 'downloadBackup'])->name('backuprestore.download');
+    Route::post('backuprestorenow', [BackupRestoreController::class, 'backupDB'])->name('backuprestore.now');
 
     // pacheck din ito kung tama lang ginawa hehe
 
@@ -144,5 +156,14 @@ Route::get('/test', function () {
 
 Route::get('testMail', function () {
     $booking = Booking::find(23);
-    BookingCreated::dispatch($booking);
+    // BookingCreated::dispatch($booking);
+    return (new BookingCreatedNotification($booking))->toMail($booking->user);
+
+    // Notification::route('mail', 'harnelleamor@gmail.com')
+    //             ->notify(new BookingCreatedNotification($booking));
+});
+
+Route::get('testDelete', function () {
+    $booking = Booking::find(28);
+    $booking->delete();
 });

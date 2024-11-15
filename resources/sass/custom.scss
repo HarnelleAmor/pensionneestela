@@ -71,6 +71,11 @@ $darkgreen-dark: #021213;
     background-color: rgba($sage, var(--bs-bg-opacity, 1)) !important;
 }
 
+.text-bg-darkgreen {
+    color: #{$sage-light} !important;
+    background-color: rgba($darkgreen, var(--bs-bg-opacity, 1)) !important;
+}
+
 .border-darkgreen {
     --bs-border-opacity: 1;
     border-color: rgba($darkgreen, var(--bs-border-opacity)) !important
