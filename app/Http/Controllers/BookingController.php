@@ -38,8 +38,14 @@ class BookingController extends Controller
                 ->where('is_archived', false)
                 ->latest('checkin_date')
                 ->get();
+            $distinct_years = DB::table('bookings')
+                ->selectRaw('YEAR(checkin_date) as year')
+                ->union(DB::table('bookings')->selectRaw('YEAR(checkout_date) as year'))
+                ->distinct()
+                ->orderBy('year', 'desc')
+                ->pluck('year');
             $units = Unit::all();
-            return view('bookings.booking_index', compact('bookings', 'units'));
+            return view('bookings.booking_index', compact('bookings', 'distinct_years', 'units'));
         }
     }
 
@@ -63,6 +69,26 @@ class BookingController extends Controller
         } else {
             $has_booking_queue = BookingQueue::where('user_id', Auth::id())->exists();
             if ($has_booking_queue) {
+                $existing_booking_queue = BookingQueue::where('user_id', Auth::id())->first();
+                if (empty($request->session()->get('booking'))) {
+                    $booking = new Booking();
+                    $booking->fill([
+                        'user_id' => Auth::id(),
+                        'unit_id' => $existing_booking_queue->unit_id,
+                        'checkin_date' => $existing_booking_queue->check_in,
+                        'checkout_date' => $existing_booking_queue->check_out
+                    ]);
+                    $request->session()->put('booking', $booking);
+                } else {
+                    $booking = $request->session()->get('booking');
+                    $booking->fill([
+                        'user_id' => Auth::id(),
+                        'unit_id' => $existing_booking_queue->unit_id,
+                        'checkin_date' => $existing_booking_queue->check_in,
+                        'checkout_date' => $existing_booking_queue->check_out
+                    ]);
+                    $request->session()->put('booking', $booking);
+                }
                 return redirect()->route('booking.formCreate')->with('queue_exists', 'There is an existing booking form.')->withInput($request->all());
             }
         }
@@ -191,8 +217,8 @@ class BookingController extends Controller
     public function postBookingForm(Request $request)
     {
         $rules = [
-            'first_name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
+            'first_name' => 'nullable|string|max:255',
+            'last_name' => 'nullable|string|max:255',
             'phone_no' => 'required|regex:/^09\d{9}$/',
             'email' => 'required|email',
             'no_of_guests' => 'required|integer|min:1',
@@ -257,8 +283,8 @@ class BookingController extends Controller
         }
 
         $booking->fill([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
+            'first_name' => $request->first_name ? $request->first_name : 'N/A',
+            'last_name' => $request->last_name ? $request->last_name : 'N/A',
             'email' => $request->email,
             'phone_no' => $request->phone_no,
             'no_of_guests' => $request->no_of_guests,
@@ -322,10 +348,11 @@ class BookingController extends Controller
     public function getBookingPay(Request $request)
     {
         if (!$request->session()->has('booking') && !$request->session()->has('booking_downpayment') && !$request->session()->has('sessionServices')) {
+            Alert::error('Error', 'Action not allowed');
             if (Gate::allows('is-customer')) {
-                return redirect()->route('customerdashboard')->with('error', 'Action not allowed.');
+                return redirect()->route('customerdashboard');
             } else {
-                return redirect()->route('managerdashboard')->with('error', 'Action not allowed.');
+                return redirect()->route('managerdashboard');
             }
         }
 
@@ -344,18 +371,33 @@ class BookingController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'ref_no' => ['required', 'unique:bookings,gcash_ref_no'],
-            'privTerms' => ['accepted']
+            'ref_no' => 'nullable|unique:bookings,gcash_ref_no',
+            'privTerms' => 'accepted'
         ]);
+
+        if (Gate::allows('is-manager')) {
+            $request->validate([
+                'cash_amount' => 'required|numeric|min:0',
+            ]);
+        }
+
+        if(is_null($request->ref_no) && $request->cash_amount == 0) {
+            Alert::error('Can\'t continue', 'There\'s no downpayment amount.');
+            return back()->withInput();
+        }
+
         $booking = $request->session()->get('booking');
         $selectedServices = $request->session()->get('sessionServices');
         $downpayment = $request->session()->get('booking_downpayment');
-        $outstanding_pay = $booking->total_payment - $downpayment;
-
+        $outstanding_pay = $booking->total_payment;
+        if (!is_null($request->ref_no)) {
+            $outstanding_pay -= $downpayment;
+        }
+        $outstanding_pay -= $request->cash_amount;
         $booking->fill([
             'status' =>  Auth::user()->usertype == 'manager' ? 'confirmed' : 'pending',
             'outstanding_payment' => $outstanding_pay,
-            'gcash_ref_no' => $request->ref_no == 'cash' ? null : $request->ref_no
+            'gcash_ref_no' => $request->ref_no ? $request->ref_no : null
         ]);
 
         try {
@@ -374,6 +416,7 @@ class BookingController extends Controller
                     'status' => $booking->status,
                     'outstanding_payment' => $booking->outstanding_payment,
                     'gcash_ref_no' => $booking->gcash_ref_no,
+                    'cash_amount' => $request->cash_amount == 0 ? null : $request->cash_amount
                 ]);
 
                 if (!empty($selectedServices)) {
@@ -467,21 +510,36 @@ class BookingController extends Controller
         $booking->checkin_time = Carbon::now();
         $booking->status = 'checked-in';
         if ($booking->save()) {
-            return redirect()->back()->with('success', 'Booking is updated. Guest/s arrived.');
+            Alert::success('Success', 'Booking is updated. Guest/s arrived.');
+            return redirect()->back();
         } else {
-            return back()->with('error', 'Something went wrong when checking in guest/s.');
+            Alert::success('Error', 'Something went wrong when checking in guest/s.');
+            return back();
         }
     }
 
-    public function checkoutBooking(Booking $booking)
+    public function checkoutBooking(Request $request, Booking $booking)
     {
+        $request->validate([
+            'damage_fee' => 'required|numeric|min:0'
+        ]);
+
+        if ($request->damage_fee == 0) {
+            $booking->damage_fee = 0.00;
+        } else {
+            $booking->damage_fee = $request->damage_fee;
+            $booking->total_payment += $request->damage_fee;
+        }
+
         $booking->checkout_time = Carbon::now();
         $booking->status = 'checked-out';
         $booking->outstanding_payment = 0;
         if ($booking->save()) {
-            return redirect()->back()->with('success', 'Booking is updated. Guest/s departed.');
+            Alert::success('Success', 'Booking is updated. Guest/s departed.');
+            return redirect()->back();
         } else {
-            return back()->with('error', 'Something went wrong when checking out guest/s.');
+            Alert::error('Error', 'Something went wrong when checking out guest/s.');
+            return back();
         }
     }
 
@@ -541,10 +599,11 @@ class BookingController extends Controller
 
                 $booking->services()->sync($syncData);
             }, 2);
-
-            return redirect()->back()->with('success', 'The availed services is updated.');
+            Alert::success('Success', 'The availed services is updated.');
+            return redirect()->back();
         } catch (\Exception $e) {
-            return back()->withInput()->with('error', 'Something went wrong when updating availed services.');
+            Alert::error('Error', 'Something went wrong when updating availed services.');
+            return back()->withInput();
         }
     }
 
@@ -578,9 +637,11 @@ class BookingController extends Controller
     {
         $booking->status = 'no-show';
         if ($booking->save()) {
+            Alert::success('Success', 'The booking is marked as \'No Show\'');
             return redirect()->back();
         } else {
-            return back()->with('error', 'Something went wrong in updating the booking.');
+            Alert::error('Error', 'Something went wrong in updating the booking.');
+            return back();
         }
     }
 
@@ -593,7 +654,6 @@ class BookingController extends Controller
         //     'user_id', Auth::id(),
         //     'unit_id'
         // ]);
-
         return redirect($request->destination);
     }
 

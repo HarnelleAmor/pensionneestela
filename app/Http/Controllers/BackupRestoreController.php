@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
+use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
-use Symfony\Component\Process\Process;
+use WatheqAlshowaiter\BackupTables\BackupTables;
 
 class BackupRestoreController extends Controller
 {
@@ -15,106 +19,73 @@ class BackupRestoreController extends Controller
      */
     public function index()
     {
-        // $backupPath = storage_path('app/backups');   
-        $files = Storage::disk('backups')->files();
-        // dd($files);
+        Gate::authorize('is-manager');
+        $getFiles = Storage::disk('local')->files(env('APP_NAME'));
+        $files = collect($getFiles)->map(function ($item) {
+            return [
+                'name' => basename($item),
+                'created_at' => Carbon::parse(Storage::disk('local')->lastModified($item))->toDayDateTimeString(),
+                'timestamp' => Storage::disk('local')->lastModified($item), // Store the timestamp for sorting
+            ];
+        })->sortByDesc('timestamp') // Sort by the timestamp in descending order
+          ->values() // Reindex the collection
+          ->toArray(); // Convert back to an array if needed
+
         return view('backuprestore.backuprestore_index', compact('files'));
     }
 
-    public function backupDB()
+    private function generateInsertSql($data, $tableName)
     {
-        $databaseName = env('DB_DATABASE');
-        $username = env('DB_USERNAME');
-        $password = env('DB_PASSWORD');
-        $host = env('DB_HOST');
-        $backupPath = storage_path('app/backups');
-        $backupFile = 'backup_' . now()->format('Y_m_d_H_i_s') . '.sql';
+        $insertStatements = "INSERT INTO `$tableName` VALUES \n";
 
-        // Ensure the backups directory exists
-        if (!file_exists($backupPath)) {
-            mkdir($backupPath, 0777, true);
+        foreach ($data as $record) {
+            $values = array_map(fn($value) => is_null($value) ? 'NULL' : "'" . addslashes($value) . "'", (array)$record);
+            $insertStatements .= "(" . implode(", ", $values) . "),\n";
         }
-        // Use the path to mysqldump from the environment
-        $mysqldumpPath = env('DB_MYSQLDUMP_PATH', 'mysqldump') . '\mysqldump.exe'; // Default to 'mysqldump' if not set
-        // dd($mysqldumpPath);
-        // Generate the mysqldump command
-        $dumpCommand = "\"{$mysqldumpPath}\" -u {$username} -p{$password} -h {$host} {$databaseName} > \"{$backupPath}/{$backupFile}\"";
 
-        // Execute the command
-        $process = Process::fromShellCommandline($dumpCommand);
-        $process->run();
+        // Remove the trailing comma and newline, and add a semicolon
+        $insertStatements = rtrim($insertStatements, ",\n") . ";\n";
 
-        if ($process->isSuccessful()) {
-            Alert::success('Success', ' Database backup completed successfully.');
-            return redirect()->back();
-            // return response()->json(['message' => 'Backup created successfully', 'file' => $backupFile]);
-        }
-        Alert::error('500 Error', 'Database backup failed. Error: ' . $process->getErrorOutput());
-        return back();
-        // return response()->json(['message' => 'Backup failed', 'error' => $process->getErrorOutput()], 500);
+        return $insertStatements;
     }
 
     public function restore(Request $request)
     {
+        Gate::authorize('is-manager');
         $request->validate([
-            'backup_file' => 'required|string', // The file name of the backup
+            'backup_file' => 'required|file|mimetypes:text/plain,application/octet-stream',
         ]);
 
-        $databaseName = env('DB_DATABASE');
-        $username = env('DB_USERNAME');
-        $password = env('DB_PASSWORD');
-        $host = env('DB_HOST');
-        $backupPath = storage_path('app/backups/' . $request->backup_file);
-
-        // Check if the file exists
-        if (!file_exists($backupPath)) {
-            Alert::error('404 Error', 'Backup file not found.');
-            return back();
-            // return response()->json(['message' => 'Backup file not found'], 404);
+        $file = $request->file('backup_file');
+        if ($file->getClientOriginalExtension() !== 'sql') {
+            return back()->withErrors(['backup_file' => 'Only .sql files are allowed.']);
         }
+        $path = Storage::putFile('temp', $file);
 
-        // Generate the mysql import command
-        $restoreCommand = "mysql -u {$username} -p{$password} -h {$host} {$databaseName} < {$backupPath}";
-
-        // Execute the command
-        $process = Process::fromShellCommandline($restoreCommand);
-        $process->run();
-
-        if ($process->isSuccessful()) {
-            Alert::success('Success', ' Database backup restored successfully.');
-            return redirect()->back();
-            // return response()->json(['message' => 'Database restored successfully']);
-        }
-        Alert::error('500 Error', 'Restore failed. Error: ' . $process->getErrorOutput());
-        return back();
-        // return response()->json(['message' => 'Restore failed', 'error' => $process->getErrorOutput()], 500);
-    }
-
-    public function backupNow()
-    {
         try {
-            // Trigger the backup:run command
-            Artisan::call('backup:run --only-db');
-            // Return success message or handle response
-            Alert::success('Success', 'Backup completed successfully.');
-            return redirect()->back();
+            DB::transaction(function () use ($path) {
+                $sql = Storage::get($path);
+                DB::unprepared($sql);
+                Storage::disk('local')->delete($path);
+            });
+    
+            Alert::success('Success', 'Database restored successfully!');
+            return redirect()->route('backuprestore.index');
         } catch (\Exception $e) {
-            // Handle errors
-            Alert::error('Error', 'Backup failed. Error: ' . $e->getMessage());
+            Alert::error('Error', 'Database restore failed: ' . $e->getMessage());
             return back();
-            // return response()->json(['message' => 'Backup failed.', 'error' => $e->getMessage()], 500);
         }
     }
 
     public function downloadBackup(Request $request)
     {
+        Gate::authorize('is-manager');
         $request->validate([
-            'backup_file' => 'required',
+            'backup_file' => 'required|string',
         ]);
-        // $filePath = env('APP_NAME') . '/' . $request->backup_file;
-        dd(Storage::download('backup_2024_11_14_11_44_51.sql'));
-        if (Storage::disk('backups')->exists($request->backup_file)) {
-            return Storage::download($request->backup_file);
+        $path = env('APP_NAME') . '/' . $request->backup_file;
+        if (Storage::disk('local')->exists($path)) {
+            return Storage::download($path);
         }
 
         Alert::error('404 Error', 'File not found');

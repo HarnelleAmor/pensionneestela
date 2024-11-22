@@ -5,8 +5,22 @@
             <h4 class="text-center fw-semibold mt-2 text-darkgreen">Log In</h4>
 
             @if (session('status'))
-                <div class="alert alert-info mb-4" role="alert">
+                <div class="alert alert-info alert-dismissible fade show mb-4" role="alert">
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                     {{ session('status') }}
+                </div>
+            @endif
+            @if (session('deactivatedAccount'))
+                <div class="alert alert-danger mb-4 rounded-4" role="alert">
+                    <div class="d-flex justify-content-center mb-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-exclamation-circle" viewBox="0 0 16 16">
+                            <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
+                            <path d="M7.002 11a1 1 0 1 1 2 0 1 1 0 0 1-2 0M7.1 4.995a.905.905 0 1 1 1.8 0l-.35 3.507a.552.552 0 0 1-1.1 0z"/>
+                        </svg>
+                    </div>
+                    <p class="mb-0 text-center small">
+                        Your account is deactivated. To re-activate your account, reach out to us through <a href="mailto:pensionneestella@gmail.com">pensionneestella@gmail.com</a> or <a href="tel:470-944-7433">470-944-7433</a>.
+                    </p>
                 </div>
             @endif
 

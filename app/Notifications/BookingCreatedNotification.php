@@ -83,7 +83,7 @@ class BookingCreatedNotification extends Notification
             // ->action('View Your Booking', url('/bookings/' . $this->booking->id))
             // ->salutation('Warm regards,')
             // ->line(config('app.name'))
-            ->view('mail.booking.created', ['booking' => $this->booking]); // Pass booking data;
+            ->markdown('mail.booking.created', ['booking' => $this->booking]); // Pass booking data;
     }
 
 

@@ -108,8 +108,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('audits', AuditController::class)->only(['index']);
 
     Route::get('backuprestore', [BackupRestoreController::class, 'index'])->name('backuprestore.index');
-    Route::post('backuprestore', [BackupRestoreController::class, 'downloadBackup'])->name('backuprestore.download');
-    Route::post('backuprestorenow', [BackupRestoreController::class, 'backupDB'])->name('backuprestore.now');
+    Route::post('backuprestore', [BackupRestoreController::class, 'downloadBackup'])->name('download.backup');
+    Route::post('backuprestore/restore', [BackupRestoreController::class, 'restore'])->name('restore.backup');
 
     // pacheck din ito kung tama lang ginawa hehe
 

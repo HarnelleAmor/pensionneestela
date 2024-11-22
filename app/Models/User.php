@@ -45,10 +45,10 @@ class User extends Authenticatable implements Auditable // implements MustVerify
 
         return 'harnelleamor@gmail.com';
         // Return email address only...
-        // return $this->email_address;
+        // return $this->email;
  
         // Return email address and name...
-        // return [$this->email_address => $this->first_name];
+        // return [$this->email => $this->first_name];
     }
 
     /**
@@ -98,17 +98,6 @@ class User extends Authenticatable implements Auditable // implements MustVerify
             ->withPivot('details', 'rating', 'is_archived')
             ->withTimestamps();
     }
-
-    /**
-     * A User can book many units, and a unit can be booked by many users
-     */
-    // public function bookings(): BelongsToMany
-    // {
-    //     return $this->belongsToMany(Unit::class, 'bookings', 'user_id', 'unit_id')
-    //         ->as('booking')
-    //         ->withPivot('no_of_guests', 'checkin_date', 'checkout_date', 'outstanding_payment', 'total_payment', 'is_archived')
-    //         ->withTimestamps();
-    // }
 
     /**
      * A User can have many bookings, and a booking belongs to a user

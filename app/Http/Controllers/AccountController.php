@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Jobs\SendBookingEmail;
 use App\Mail\SampleMail;
 use App\Models\Booking;
+use App\Models\BookingQueue;
 use App\Models\User;
 use App\Notifications\BookingCreated;
 use Carbon\Carbon;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
@@ -159,14 +161,31 @@ class AccountController extends Controller
     public function deactivate(User $account)
     {
         Gate::authorize('is-manager');
+
+        $no_bookings = Booking::where('user_id', $account->id)
+            ->where(function (Builder $query) {
+                $query->where('status', 'pending')
+                    ->orWhere('status', 'confirmed')
+                    ->orWhere('status', 'checked-in');
+            })
+            ->where('is_archived', 0)
+            ->doesntExist();
         
-        $account->is_archived = true;
-        if ($account->save()) {
-            Alert::success('Success', 'The account is deactivated.');
-            return redirect()->back();
+        $no_booking_queue = BookingQueue::where('user_id', $account->id)->doesntExist();
+
+        if ($no_bookings && $no_booking_queue) {
+            $account->is_archived = true;
+            if ($account->save()) {
+                // send deactivation notification
+                Alert::success('Success', 'The account is deactivated.');
+                return redirect()->back();
+            } else {
+                Alert::error('Error', 'Something went wrong in deactivating account');
+                return redirect()->back();
+            }
         } else {
-            Alert::error('Error', 'Something went wrong in deactivating account');
-            return redirect()->back();
+            Alert::error('Error', 'Account has active bookings.');
+            return back();
         }
     }
 
@@ -176,6 +195,7 @@ class AccountController extends Controller
         
         $account->is_archived = false;
         if ($account->save()) {
+            // send activation notification
             Alert::success('Success', 'The account is activated.');
             return redirect()->back();
         } else {

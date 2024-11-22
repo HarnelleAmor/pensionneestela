@@ -28,8 +28,7 @@ class ManageBookings extends Component
         $this->bookings = Booking::where('is_archived', 0)
             ->where(function (Builder $query) {
                 $query->where('status', 'pending')
-                    ->orWhere('status', 'confirmed')
-                    ->orWhere('status', 'checked-in');
+                    ->orWhere('status', 'confirmed');
             })
             ->get();
 

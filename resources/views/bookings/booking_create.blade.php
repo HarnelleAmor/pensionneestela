@@ -35,9 +35,9 @@
                     <form action="{{ route('unit.selected') }}" method="post">
                         @csrf
                         <input type="hidden" name="makeNewBookForm" value="1" />
-                        <input type="hidden" name="unit_id" value="{{old('unit_id')}}" />
-                        <input type="hidden" name="checkin" value="{{old('checkin')}}" />
-                        <input type="hidden" name="checkout" value="{{old('checkout')}}" />
+                        <input type="hidden" name="unit_id" value="{{ old('unit_id') }}" />
+                        <input type="hidden" name="checkin" value="{{ old('checkin') }}" />
+                        <input type="hidden" name="checkout" value="{{ old('checkout') }}" />
                         <button type="submit" class="btn btn-danger no-unload-warning">Discard Current Booking</button>
                     </form>
                 </div>
@@ -58,10 +58,11 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Stay on Page</button>
-                    <form action="{{route('booking.deleteQueue')}}" method="post">
+                    <form action="{{ route('booking.deleteQueue') }}" method="post">
                         @csrf
                         <input type="hidden" name="destination" id="leaveDestination">
-                        <button type="submit" class="btn btn-danger no-unload-warning" id="confirmLeave">Leave Page</button>
+                        <button type="submit" class="btn btn-danger no-unload-warning" id="confirmLeave">Leave
+                            Page</button>
                     </form>
                 </div>
             </div>
@@ -77,30 +78,42 @@
                     <div class="card-body px-5">
 
                         <div class="card-title fs-2 fw-medium text-center">Booking Form</div>
-                        <div class="card-subtitle text-body-secondary text-center mb-4">Please fill up this form to book the unit.</div>
+                        <div class="card-subtitle text-body-secondary text-center mb-4">Please fill up this form to book the
+                            unit.</div>
 
                         <form id="bookingForm" action="{{ route('booking.formStore') }}" method="post">
                             @csrf
-                            <div class="row justify-content-center align-items-start g-4 mb-4">
+                            <div class="row justify-content-center align-items-start gx-4 mb-4">
                                 <div class="col-md-3">
-                                    <label for="first_name" class="form-label mb-0">First Name</label>
+                                    <label for="first_name" class="form-label mb-0">First Name <small class="text-secondary">(Optional)</small></label>
                                     <input id="first_name"
                                         class="form-control border-bottom-only @error('first_name') is-invalid @enderror"
                                         type="text" name="first_name"
-                                        value="{{ old('first_name', $user->usertype === 'customer' ? $user->first_name : $booking->first_name) }}"
-                                        required />
+                                        value="{{ old('first_name', $user->usertype === 'customer' ? $user->first_name : $booking->first_name) }}" />
                                     @error('first_name')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
                                 <div class="col-md-3">
-                                    <label for="last_name" class="form-label mb-0">Last Name</label>
+                                    <label for="last_name" class="form-label mb-0">Last Name <small class="text-secondary">(Optional)</small></label>
                                     <input id="last_name"
                                         class="form-control border-bottom-only @error('last_name') is-invalid @enderror"
                                         type="text" name="last_name"
-                                        value="{{ old('last_name', $user->usertype === 'customer' ? $user->last_name : $booking->last_name) }}"
-                                        required />
+                                        value="{{ old('last_name', $user->usertype === 'customer' ? $user->last_name : $booking->last_name) }}" />
                                     @error('last_name')
+                                        <small class="text-danger">{{ $message }}</small>
+                                    @enderror
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="email" class="form-label mb-0">Email</label>
+                                    <input id="email"
+                                        class="form-control border-bottom-only @error('email') is-invalid @enderror"
+                                        type="text" name="email" placeholder="name@example.com"
+                                        value="{{ old('email', $user->usertype === 'customer' ? $user->email : $booking->email) }}" 
+                                        required />
+                                    <small class="text-muted fst-italic">We will be sending a confirmation of your booking
+                                        through the email provided.</small>
+                                    @error('email')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -112,19 +125,6 @@
                                         value="{{ old('phone_no', $user->usertype === 'customer' ? $user->phone_no : $booking->phone_no) }}"
                                         required />
                                     @error('phone_no')
-                                        <small class="text-danger">{{ $message }}</small>
-                                    @enderror
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="email" class="form-label mb-0">Email</label>
-                                    <input id="email"
-                                        class="form-control border-bottom-only @error('email') is-invalid @enderror"
-                                        type="text" name="email" placeholder="name@example.com"
-                                        value="{{ old('email', $user->usertype === 'customer' ? $user->email : $booking->email) }}"
-                                        required />
-                                    <small class="text-muted fst-italic">We will be sending a confirmation of your booking
-                                        through the email provided.</small>
-                                    @error('email')
                                         <small class="text-danger">{{ $message }}</small>
                                     @enderror
                                 </div>
@@ -168,15 +168,18 @@
                                                         data-bs-title="This initial fee is subject to adjustment based on the meal request."></i>
                                                 </div>
                                                 <div class="fst-italic">
-                                                    <small>Request a <strong>home-cooked meal</strong> to be ready or delivered to your room during your stay. Let us know your preferences in the box below. For more inquiries, you may call us at <span class="text-decoration-underline">470-944-7433</span>.</small>
+                                                    <small>Request a <strong>home-cooked meal</strong> to be ready or
+                                                        delivered to your room during your stay. Let us know your
+                                                        preferences in the box below. For more inquiries, you may call us at
+                                                        <span
+                                                            class="text-decoration-underline">470-944-7433</span>.</small>
                                                 </div>
                                                 <input class="form-control service-quantity"
                                                     id="quantity_{{ $service['id'] }}" type="hidden"
                                                     name="quantity{{ $service['id'] }}" value="1"
                                                     @disabled(!old('service' . $service['id'], $service['is_checked'])) />
-                                                    <textarea class="form-control service-description mt-2" id="description_{{ $service['id'] }}"
-                                                    name="description{{ $service['id'] }}" rows="3"
-                                                    @disabled(!old('service' . $service['id'], $service['is_checked']))
+                                                <textarea class="form-control service-description mt-2" id="description_{{ $service['id'] }}"
+                                                    name="description{{ $service['id'] }}" rows="3" @disabled(!old('service' . $service['id'], $service['is_checked']))
                                                     placeholder="Let us know what meals you'd like and we'll cook it for you.">{{ old('description' . $service['id'], $service['details']) }}</textarea>
                                                 @error('description.' . $service['id'])
                                                     <small class="text-danger">{{ $message }}</small>
@@ -192,12 +195,13 @@
                                                         data-service-name="{{ $service['name'] }}"
                                                         @checked(old('service' . $service['id'], $service['is_checked'])) />
                                                     <label class="form-check-label fw-medium"
-                                                        for="service_{{ $service['id'] }}" data-bs-toggle="tooltip" data-bs-title="Each unit already includes 3 bed foams, one of which is foldable.">
-                                                            {{ $service['name'] }}
+                                                        for="service_{{ $service['id'] }}" data-bs-toggle="tooltip"
+                                                        data-bs-title="Each unit already includes 3 bed foams, one of which is foldable.">
+                                                        {{ $service['name'] }}
                                                     </label>
                                                 </div>
                                                 <div class="col-auto">
-                                                    <div class="input-group d-flex flex-nowrap" >
+                                                    <div class="input-group d-flex flex-nowrap">
                                                         <span class="input-group-text">Quantity:</span>
                                                         <input type="number" id="quantity_{{ $service['id'] }}"
                                                             name="quantity{{ $service['id'] }}" type="text"
@@ -205,9 +209,7 @@
                                                             style="min-width: 50px; max-width: 55px"
                                                             value="{{ old('quantity' . $service['id'], $service['quantity']) }}"
                                                             aria-describedby="quantitylabel{{ $service['id'] }}"
-                                                            min="1"
-                                                            max="2"
-                                                            @disabled(!old('service' . $service['id'], $service['is_checked'])) />
+                                                            min="1" max="2" @disabled(!old('service' . $service['id'], $service['is_checked'])) />
                                                     </div>
                                                 </div>
                                                 @error('quantity.' . $service['id'])
@@ -229,7 +231,8 @@
                                                         onchange="toggleFields({{ $service['id'] }}, '{{ $service['name'] }}')"
                                                         data-service-name="{{ $service['name'] }}"
                                                         @checked(old('service' . $service['id'], $service['is_checked'])) />
-                                                    <label class="form-check-label fw-medium" data-bs-toggle="tooltip" data-bs-title="Each unit already has 6 {{ strtolower($service['name']) }}."
+                                                    <label class="form-check-label fw-medium" data-bs-toggle="tooltip"
+                                                        data-bs-title="Each unit already has 6 {{ strtolower($service['name']) }}."
                                                         for="service_{{ $service['id'] }}">
                                                         {{ $service['name'] }}
                                                     </label>
@@ -243,9 +246,7 @@
                                                             style="min-width: 50px; max-width: 55px"
                                                             value="{{ old('quantity' . $service['id'], $service['quantity']) }}"
                                                             aria-describedby="quantitylabel{{ $service['id'] }}"
-                                                            min="1"
-                                                            max="3"
-                                                            @disabled(!old('service' . $service['id'], $service['is_checked'])) />
+                                                            min="1" max="3" @disabled(!old('service' . $service['id'], $service['is_checked'])) />
                                                     </div>
                                                 </div>
                                                 @error('quantity.' . $service['id'])
@@ -254,7 +255,8 @@
                                                 <div class="">Base Cost:
                                                     &#8369;{{ number_format($service['service_cost'], 2) }}</div>
                                                 <div class="col-md-12 fst-italic">
-                                                    <small>You can request a <strong>maximum of 3</strong> {{ strtolower($service['name']) }}.</small>
+                                                    <small>You can request a <strong>maximum of 3</strong>
+                                                        {{ strtolower($service['name']) }}.</small>
                                                 </div>
                                             </div>
                                         @endif
@@ -315,10 +317,14 @@
                                                 <div>Tentative Total Payment</div>
                                                 <span>&#8369;{{ number_format($unit_selected->price_per_night * $no_of_nights, 2) }}</span>
                                             </div>
-                                            <small class="fst-italic text-secondary">Fees of services availed are not yet included.</small>
+                                            <small class="fst-italic text-secondary">Fees of services availed are not yet
+                                                included.</small>
                                             <div class="alert alert-info rounded-0 mt-3" role="alert">
-                                                <div class="fs-5 fw-semibold">Down Payment &#8369;{{ number_format(($unit_selected->price_per_night * $no_of_nights) / 2, 2) }}</div>
-                                                <small class="fst-italic text-secondary">The down-payment method will be shown
+                                                <div class="fs-5 fw-semibold">Down Payment
+                                                    &#8369;{{ number_format(($unit_selected->price_per_night * $no_of_nights) / 2, 2) }}
+                                                </div>
+                                                <small class="fst-italic text-secondary">The down-payment method will be
+                                                    shown
                                                     in the next form. Please prepare your GCash.</small>
                                             </div>
                                         </div>
@@ -328,9 +334,12 @@
 
 
                             <div class="d-flex justify-content-center mt-5 mb-3">
-                                <button type="submit" class="btn btn-primary icon-link icon-link-hover text-center d-flex align-items-center justify-content-center fs-5 no-unload-warning" data-no-leave-confirmation="true">
-                                    Proceed to Payment<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"
-                                        fill="currentColor" class="bi bi-arrow-right ms-1" viewBox="0 0 16 16">
+                                <button type="submit"
+                                    class="btn btn-primary icon-link icon-link-hover text-center d-flex align-items-center justify-content-center fs-5 no-unload-warning"
+                                    data-no-leave-confirmation="true">
+                                    Proceed to Payment<svg xmlns="http://www.w3.org/2000/svg" width="20"
+                                        height="20" fill="currentColor" class="bi bi-arrow-right ms-1"
+                                        viewBox="0 0 16 16">
                                         <path fill-rule="evenodd"
                                             d="M1 8a.5.5 0 0 1 .5-.5h11.793l-3.147-3.146a.5.5 0 0 1 .708-.708l4 4a.5.5 0 0 1 0 .708l-4 4a.5.5 0 0 1-.708-.708L13.293 8.5H1.5A.5.5 0 0 1 1 8" />
                                     </svg>
@@ -395,8 +404,8 @@
         });
 
         // Exempt specific buttons from triggering the beforeunload event
-        document.querySelectorAll('.no-unload-warning').forEach(function (button) {
-            button.addEventListener('click', function () {
+        document.querySelectorAll('.no-unload-warning').forEach(function(button) {
+            button.addEventListener('click', function() {
                 // Temporarily disable the unload warning
                 isExempt = true;
             });
@@ -433,8 +442,6 @@
         function toggleFields(serviceId, serviceName) {
             const checkbox = document.getElementById('service_' + serviceId);
             const quantityInput = document.getElementById('quantity_' + serviceId);
-            const quanButtonMin = document.getElementById('quanbuttonmin_' + serviceId);
-            const quanButtonMax = document.getElementById('quanbuttonmax_' + serviceId);
             const descriptionInput = document.getElementById('description_' + serviceId);
 
             if (checkbox.checked) {
@@ -446,8 +453,7 @@
                 } else {
                     quantityInput.disabled = false;
                     quantityInput.required = true;
-                    quanButtonMin.disabled = false;
-                    quanButtonMax.disabled = false;
+                    quantityInput.value = 1;
                 }
             } else {
                 // unchecked
@@ -460,8 +466,6 @@
                     quantityInput.disabled = true;
                     quantityInput.required = false;
                     quantityInput.value = null;
-                    quanButtonMin.disabled = true;
-                    quanButtonMax.disabled = true;
                 }
             }
         }

@@ -31,6 +31,7 @@
             </div>
         </div>
         @include('layouts.footer')
+        @include('sweetalert::alert')
         @livewireScripts
         @stack('scripts')
     </body>

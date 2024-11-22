@@ -34,7 +34,7 @@ class UnitCheckController extends Controller
             $is_available = Booking::where('unit_id', $unit->id)
             ->where('is_archived', false)
             ->where(function ($query) {
-                $query->where('status', 'pending')->orWhere('status', 'confirmed');
+                $query->where('status', 'pending')->orWhere('status', 'confirmed')->orWhere('status', 'checked-in');
             })
             ->where(function ($query) use ($checkin_date, $checkout_date) {
                 $query->whereBetween('checkin_date', [$checkin_date, $checkout_date])

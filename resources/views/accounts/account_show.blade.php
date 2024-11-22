@@ -4,9 +4,12 @@
     <div class="container pt-3 vh-100">
         <div class="row justify-content-center align-items-start g-2">
             <div class="col-12">
-                <a href="{{ route('accounts.index') }}" class="text-decoration-none icon-link"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left-short" viewBox="0 0 16 16">
-                    <path fill-rule="evenodd" d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5"/>
-                  </svg>Go Back</a>
+                <a href="{{ route('accounts.index') }}" class="text-decoration-none icon-link"><svg
+                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        class="bi bi-arrow-left-short" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                            d="M12 8a.5.5 0 0 1-.5.5H5.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L5.707 7.5H11.5a.5.5 0 0 1 .5.5" />
+                    </svg>Go Back</a>
             </div>
             <div class="col-lg-8 col-md-7 order-lg-1 order-md-1 order-sm-2 order-2">
                 <div class="card">
@@ -180,38 +183,39 @@
                         <div class="d-flex flex-column gap-1 mt-4">
                             <a href="{{ route('accounts.edit', $account) }}" class="btn btn-darkgreen w-100">Edit
                                 Account</a>
-                            @if (!$account->is_archived)
-                                <button type="button" class="btn btn-danger w-100" x-data="{
-                                    alertConfirm() {
-                                        Swal.fire({
-                                            title: 'Are you sure?',
-                                            text: 'This action cannot be undone.',
-                                            icon: 'warning',
-                                            showCancelButton: true,
-                                            confirmButtonColor: '#d33',
-                                            cancelButtonColor: '#3085d6',
-                                            confirmButtonText: 'Yes'
-                                        }).then((result) => {
-                                            if (result.isConfirmed) {
-                                                $('#deactivate').submit();
-                                            }
-                                        });
-                                    }
-                                }"
-                                    x-on:click="alertConfirm">Deactivate Account</button>
-                                <form id="deactivate" action="{{ route('account.deactivate', $account) }}" method="post"
-                                    style="display: none;">
-                                    @csrf
-                                    @method('PATCH')
-                                </form>
-                            @else
-                                <form action="{{ route('account.activate', $account) }}" method="post">
-                                    @csrf
-                                    @method('PATCH')
-                                    <button type="submit" class="btn btn-info w-100">Activate Account</button>
-                                </form>
+                            @if ($account->usertype == 'customer')
+                                @if (!$account->is_archived)
+                                    <button type="button" class="btn btn-danger w-100" x-data="{
+                                        alertConfirm() {
+                                            Swal.fire({
+                                                title: 'Are you sure?',
+                                                text: 'Accounts with confirmed bookings cannot be deactivated.',
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonColor: '#d33',
+                                                cancelButtonColor: '#3085d6',
+                                                confirmButtonText: 'Proceed'
+                                            }).then((result) => {
+                                                if (result.isConfirmed) {
+                                                    $('#deactivate').submit();
+                                                }
+                                            });
+                                        }
+                                    }"
+                                        x-on:click="alertConfirm">Deactivate Account</button>
+                                    <form id="deactivate" action="{{ route('account.deactivate', $account) }}"
+                                        method="post" style="display: none;">
+                                        @csrf
+                                        @method('PATCH')
+                                    </form>
+                                @else
+                                    <form action="{{ route('account.activate', $account) }}" method="post">
+                                        @csrf
+                                        @method('PATCH')
+                                        <button type="submit" class="btn btn-info w-100">Activate Account</button>
+                                    </form>
+                                @endif
                             @endif
-
                         </div>
                     </div>
                 </div>

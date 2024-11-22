@@ -10,7 +10,7 @@
 @endif
 @endif
 
-Intro Lines
+{{-- Intro Lines --}}
 @foreach ($introLines as $line)
 {{ $line }}
 
@@ -18,15 +18,15 @@ Intro Lines
 
 {{-- Action Button --}}
 @isset($actionText)
-<php
+<?php
     $color = match ($level) {
         'success', 'error' => $level,
         default => 'primary',
     };
 ?>
-{{-- <x-mail::button :url="$actionUrl" :color="$color">
+<x-mail::button :url="$actionUrl" :color="$color">
 {{ $actionText }}
-</x-mail::button> --}}
+</x-mail::button>
 @endisset
 
 {{-- Outro Lines --}}

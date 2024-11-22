@@ -96,7 +96,7 @@
                                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
                             </div> --}}
                             <div class="mb-3">
-                                <label for="password_confirmation" class="form-label mb-0">Password</label>
+                                <label for="password_confirmation" class="form-label mb-0">Confirm Password</label>
                                 <input type="password" class="form-control" name="password_confirmation"
                                     id="password_confirmation" required autocomplete="new-password" />
                                 @error('password_confirmation')

@@ -3,6 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProfileUpdateRequest;
+use App\Models\Booking;
+use App\Models\BookingQueue;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -49,13 +52,34 @@ class ProfileController extends Controller
 
         $user = $request->user();
 
-        Auth::logout();
+        $no_bookings = Booking::where('user_id', $user->id)
+            ->where(function (Builder $query) {
+                $query->where('status', 'pending')
+                    ->orWhere('status', 'confirmed')
+                    ->orWhere('status', 'checked-in');
+            })
+            ->where('is_archived', 0)
+            ->doesntExist();
+        
+        $no_booking_queue = BookingQueue::where('user_id', $user->id)->doesntExist();
 
-        $user->delete();
-
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-
-        return Redirect::to('/');
+        if ($no_bookings && $no_booking_queue) {
+            $user->is_archived = true;
+            if ($user->save()) {
+                // send deactivation notification
+                Auth::logout();
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                
+                alert()->success('Success', 'The account is deactivated.')->showConfirmButton('Okay', '#3085d6');
+                return Redirect::to('/');
+            } else {
+                alert()->error('Error', 'Something went wrong in deactivating account')->showConfirmButton('Okay', '#3085d6');
+                return redirect()->back();
+            }
+        } else {
+            alert()->error('Error', 'Account has active bookings.')->showConfirmButton('Okay', '#3085d6');
+            return back();
+        }
     }
 }

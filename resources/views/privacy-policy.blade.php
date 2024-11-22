@@ -24,7 +24,10 @@
                     <div class="card-body">
                         <h4 class="fw-bold text-center mb-4">Privacy Policy</h4>
 
-                        <p class="text-center mb-4">At Pensionne Estela, we are committed to safeguarding your personal information. <br> This Privacy Policy outlines our practices regarding the collection, use, and protection of your data.</p>
+                        <!-- Privacy Policy Section -->
+                        <div class="mb-4">
+                            <p>Your personal data is handled in compliance with the <strong>Data Privacy Act of 2012</strong> (Philippines) and the <strong>General Data Protection Regulation (GDPR)</strong>. By booking with Pensionne Estela, you consent to the collection, storage, and use of your data for reservation and communication purposes. We ensure the security and confidentiality of your information.</p>
+                        </div>
 
                         <div class="mb-4">
                             <h5 class="fw-semibold">1. Data Collection and Use</h5>

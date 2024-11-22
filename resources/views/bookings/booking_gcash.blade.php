@@ -243,35 +243,38 @@
                                     </div>
                                 @endif
                                 @if (auth()->user()->usertype == 'manager')
-                                    <form method="POST" action="{{ route('bookings.store') }}" x-data="{ cash: false, refNoValid: false }">
+                                    <form method="POST" action="{{ route('bookings.store') }}">
                                         @csrf
                                         <div class="mb-3">
-                                            <label for="cashCheck" class="form-check-label">Pay in Cash</label>
-                                            <input id="cashCheck" type="checkbox" x-model="cash"
-                                                class="form-check-input" />
-                                        </div>
-
-                                        <div class="mb-3" x-show="!cash">
-                                            <label for="gcashRefNo" class="form-label fs-4 fw-medium">Transaction
+                                            <label for="gcashRefNo" class="form-label mb-0 fs-4 fw-medium">Transaction
                                                 Reference Number</label>
                                             <input id="gcashRefNo" type="number"
-                                                class="form-control border-bottom-only text-center"
-                                                :name="cash ? '' : 'ref_no'"
-                                                placeholder="Enter the reference number here..." min="0"
-                                                x-bind:disabled="cash" x-bind:required="!cash"
-                                                x-on:input="refNoValid = $event.target.value.length === 13" />
-                                            <small id="helpId" class="form-text text-muted fst-italic">The GCash
+                                                class="form-control border-bottom-only text-center" name="ref_no"
+                                                placeholder="Enter the reference number here..." min="0"/>
+                                            <small class="form-text text-muted fst-italic">The
+                                                GCash
                                                 transaction number should be 13 digits.</small>
                                             @error('ref_no')
+                                                <div class="small text-danger">{{ $message }}</div>
+                                            @enderror
+                                        </div>
+                                        <div class="mb-3">
+                                            <p class="mb-0 fw-medium text-start">If the customer paid in cash partial or full, please indicate the amount paid in cash below:</p>
+                                            <div class="hstack gap-3">
+                                                <label for="cash_amount" class="form-label mb-0 text-nowrap small">Cash Amount:</label>
+                                                <input type="number" class="form-control form-control-sm"
+                                                    name="cash_amount" id="cash_amount"
+                                                    placeholder="Enter the amount paid in cash" min="0" required
+                                                    value="0" />
+                                            </div>
+                                            @error('cash_amount')
                                                 <small class="text-danger">{{ $message }}</small>
                                             @enderror
                                         </div>
 
-                                        <input type="hidden" :name="cash ? 'ref_no' : ''" value="cash">
                                         <input type="hidden" name="privTerms" value="1">
                                         <button id="submitBtn" type="submit"
-                                            class="btn btn-primary w-100 rounded-0 mt-2 mb-3"
-                                            x-bind:disabled="!cash && !refNoValid">Proceed</button>
+                                            class="btn btn-blackbean rounded-pill w-100 rounded-0 mb-3">Proceed</button>
                                     </form>
                                 @else
                                     <div x-data="{ ihaveread: true, refNoValid: false }">
@@ -284,7 +287,7 @@
                                                     class="form-control border-bottom-only text-center" name="ref_no"
                                                     aria-describedby="helpId"
                                                     placeholder="Enter the reference number here..." min="0"
-                                                    pattern="\d+" value="{{ old('ref_no') }}" required
+                                                    required
                                                     x-on:input="refNoValid = $event.target.value.length === 13" />
                                                 <small id="helpId" class="form-text text-muted fst-italic">
                                                     The GCash transaction number should be 13 digits.

@@ -62,6 +62,8 @@ return [
             ]) : [],
             'dump' => [
                 'dump_binary_path' => env('DB_MYSQLDUMP_PATH'),
+                'use_single_transaction',
+		        'timeout' => 60 * 5, // 5 minute timeout
             ]
         ],
 

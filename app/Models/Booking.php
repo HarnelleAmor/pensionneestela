@@ -38,8 +38,10 @@ class Booking extends Model implements Auditable
         'checkin_time',
         'checkout_time',
         'outstanding_payment',
+        'damage_fee',
         'total_payment',
         'gcash_ref_no',
+        'cash_amount',
         'is_archived'
     ];
 
